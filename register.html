@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Game Verse</title>
+    <link rel="manifest" href="../Games/manifest.json" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .sub {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        button:hover {
+            background: #1e3c72;
+        }
+        
+        .google-btn {
+            background: #db4437;
+            margin-top: 10px;
+        }
+        
+        .google-btn:hover {
+            background: #c53727;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #666;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+        
+        .divider::before {
+            margin-right: 10px;
+        }
+        
+        .divider::after {
+            margin-left: 10px;
+        }
+        
+        .link {
+            margin-top: 20px;
+            color: #666;
+        }
+        
+        .link a {
+            color: #2a5298;
+            text-decoration: none;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 GAME VERSE</h1>
+        <p class="sub">Create your free account</p>
+        
+        <div id="errorMsg" class="error"></div>
+        <div id="successMsg" class="success"></div>
+        
+        <input type="email" id="email" placeholder="Email address">
+        <div class="hint">You will receive a confirmation email</div>
+        
+        <input type="text" id="username" placeholder="Username">
+        <div class="hint">This will appear in the leaderboard</div>
+        
+        <input type="password" id="password" placeholder="Password">
+        <div class="hint">At least 6 characters</div>
+        
+        <input type="password" id="confirmPassword" placeholder="Confirm password">
+        
+        <button onclick="handleRegister()">Sign Up</button>
+        
+        <div class="divider">or</div>
+        
+        <button onclick="handleGoogleRegister()" class="google-btn">Sign up with Google</button>
+        
+        <div class="link">
+            Already have an account? <a href="login.html">Sign in</a>
+        </div>
+    </div>
+
+    <script src="./Rangliste_und_Anmelden.js" type="module"></script>
+    <script>
+        async function handleRegister() {
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Prüfen: E-Mail nicht leer
+            if (!email) {
+                showError("Please enter your email address!");
+                return;
+            }
+            
+            // Prüfen: Benutzername nicht leer
+            if (!username) {
+                showError("Please enter a username!");
+                return;
+            }
+            
+            // Prüfen: Passwort nicht leer
+            if (!password) {
+                showError("Please enter a password!");
+                return;
+            }
+            
+            // Prüfen: Passwort lang genug
+            if (password.length < 6) {
+                showError("Password must be at least 6 characters long!");
+                return;
+            }
+            
+            // Prüfen: Passwort und Bestätigung gleich
+            if (password !== confirmPassword) {
+                showError("Passwords do not match!");
+                return;
+            }
+            
+            const result = await registerUser(email, username, password);
+            
+            if (result.success) {
+                showSuccess("Registration successful! Please check your email for confirmation. Redirecting to login...");
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 3000);
+            } else {
+                showError(result.error);
+            }
+        }
+        
+        async function handleGoogleRegister() {
+            const result = await loginWithGoogle();
+            
+            if (result.success) {
+                showSuccess("Google sign up successful! Redirecting...");
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 1500);
+            } else {
+                showError(result.error);
+            }
+        }
+        
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+        
+        function showSuccess(msg) {
+            const el = document.getElementById('successMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Super Cat - How to Play</title>
+    <link rel="manifest" href="../manifest.json" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; background-color: darkblue; padding: 4vmin; font-family: Arial, Helvetica, sans-serif; }
+        .container { display: flex; flex-direction: column; align-items: center; gap: 4vmin; padding-bottom: 4vmin; padding-top: 60px; }
+        .box { background-color: rgba(255,255,255,0.1); border: 3px solid yellow; border-radius: 3vmin; padding: 4vmin; color: yellow; font-size: 3.5vmin; font-weight: bold; text-align: center; width: 90vw; max-width: 500px; box-shadow: 0 0 20px rgba(255,255,0,0.3); }
+        .box h2 { font-size: 6vmin; margin-bottom: 3vmin; text-decoration: underline; }
+        .row { display: flex; align-items: center; justify-content: center; gap: 2vmin; margin: 1.5vmin 0; }
+        .key { display: inline-block; background-color: yellow; color: darkblue; width: 8vmin; height: 8vmin; line-height: 8vmin; border-radius: 1.5vmin; font-weight: 900; font-size: 4vmin; text-align: center; }
+        .cat { color: #ffffff; font-weight: 900; background: rgba(0,0,0,0.5); padding: 0.3vmin 1.5vmin; border-radius: 1vmin; }
+        .guard { color: #ff8800; font-weight: 900; }
+        .diamond { color: #00ccff; font-weight: 900; }
+        .exit { color: #ffcc00; font-weight: 900; }
+        .pit { color: #ff4444; font-weight: 900; }
+        .green { color: #44ff44; font-weight: 900; }
+        .red { color: #ff4444; font-weight: 900; }
+        .trophy-table { width: 100%; border-collapse: collapse; margin-top: 2vmin; font-size: 3.5vmin; }
+        .trophy-table th { background-color: yellow; color: darkblue; padding: 1.5vmin; border: 1px solid black; }
+        .trophy-table td { padding: 1.5vmin; border: 1px solid yellow; }
+        .trophy-table .win { color: #44ff44; }
+        .trophy-table .lose { color: #ff4444; }
+        .btn-container { display: flex; gap: 3vmin; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 2vmin 5vmin; font-size: 3.5vmin; font-weight: bold; border: 2px solid black; border-radius: 2vmin; cursor: pointer; font-family: Arial, Helvetica, sans-serif; }
+        .btn-play { background-color: yellow; color: darkblue; }
+        .btn-never { background-color: #ffcc00; color: black; }
+        .back-btn { position: fixed; top: 20px; left: 20px; width: 100px; height: 36px; font-size: 14px; font-weight: 600; background-color: darkgreen; color: yellow; border: none; border-radius: 8px; cursor: pointer; z-index: 10; }
+        .back-btn:hover { background-color: orange; }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='Super_Cat_Vorschau.html'">Back</button>
+    <div class="container">
+        <div class="box">
+            <h2>Trophies</h2>
+            <table class="trophy-table">
+                <tr><th>Level</th><th>Goal</th><th class="win">Win</th><th class="lose">Lose</th></tr>
+                <tr><td>Level 1</td><td class="exit">Reach the entrance of the temple</td><td class="win">+1</td><td class="lose">-1</td></tr>
+            </table>
+            <p style="margin-top: 2vmin; font-size: 3vmin;">Win = <span class="green">get trophies</span> | Die = <span class="red">lose trophies</span></p>
+        </div>
+        <div class="box">
+            <h2>Story</h2>
+            <p style="margin-bottom: 2vmin;">You are a brave <span class="cat">black cat</span> on a dangerous mission.</p>
+            <p style="margin-bottom: 2vmin;">The <span class="guard">Queen of the Tiger Cats</span> has stolen the <span class="diamond">sacred diamonds</span>!</p>
+            <p style="margin-bottom: 2vmin;">Find your way to the <span class="exit">entrance of the temple</span>.</p>
+            <p>Beware of the <span class="guard">orange guardian cats</span>!</p>
+        </div>
+        <div class="box">
+            <h2>Keyboard</h2>
+            <div class="row"><span class="key">W</span><span>= Jump</span></div>
+            <div class="row"><span class="key">A</span><span>= Left</span></div>
+            <div class="row"><span class="key">D</span><span>= Right</span></div>
+        </div>
+        <div class="box">
+            <h2>Touch</h2>
+            <p>Use the on-screen buttons.</p>
+            <div class="row"><span class="key">W</span><span>= Jump</span></div>
+            <div class="row"><span class="key">A</span><span>= Left</span></div>
+            <div class="row"><span class="key">D</span><span>= Right</span></div>
+        </div>
+        <div class="box">
+            <h2>How to Win</h2>
+            <p>Reach the <span class="exit">temple entrance</span>!</p>
+            <p>Avoid <span class="guard">guardians</span> and <span class="pit">pits</span>!</p>
+        </div>
+        <div class="btn-container">
+            <button class="btn btn-play" onclick="startGame()">Play First Level</button>
+        </div>
+    </div>
+    <script>
+        function startGame() { sessionStorage.setItem("skipTutorial", "true"); window.location.replace("Super_Cat_1.html"); }
+    </script>
+</body>
+</html>

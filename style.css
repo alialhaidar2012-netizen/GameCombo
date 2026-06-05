@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #00008B;
+}
+/* Wrapper */
+#wrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Buttons – exakte Mitte */
+#button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+button {
+    width: 250px;
+    height: 60px;
+    font-family: sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    background-color: darkgreen;
+    color: yellow;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: orange;
+}
+
+/* Widget – 25px vom rechten Rand */
+.widgets {
+    position: absolute;
+    top: 50px;
+    right: 25px;
+    width: 280px;
+    background-color: green;
+    color: yellow;
+    font-size: 16px;
+    padding: 20px;
+    border-radius: 8px;
+}
+.widgets h3 {
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+.widgets div {
+    margin-bottom: 6px;
+}
+/* Kleiner Bildschirm */
+@media (max-width: 750px) {
+    #wrapper {
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+    }
+    .widgets {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: 90%;
+        margin: 0 auto 30px auto;
+        order: 1;              /* Widget zuerst = OBEN */
+    }
+    #button-container {
+        order: 2;              /* Buttons danach = UNTEN */
+    }
+}

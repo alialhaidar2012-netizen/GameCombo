@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Game-Verse</title>
+    <link rel="manifest" href="./Games/manifest.json" />
+    <script src="Rangliste_und_Anmelden.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="wrapper">
+        <div id="button-container"></div>
+        <div class="widgets">
+            <h3>Statistics:</h3>
+            <div>Name: <span id="nutzername"></span></div>
+            <div>Trophies: <span id="trophies"></span></div>
+            <div>Played Games: <span id="gespielteSpiele"></span></div>
+            <div>Game Overview: <span id="uebersicht"></span></div>
+            <div>Registered at: <span id="registriertAm"></span></div>
+        </div>
+    </div>
+
+    <script>
+        const buttons = [
+            ["Endless-Runner", "Endless-Runner/Endless_Runner_Vorschau.html"],
+            ["Snake", "Snake/Snake_Vorschau.html"],
+            ["Super-Cat", "Super-Cat/Super_Cat_Vorschau.html"],
+            ["Tic-Tac-Toe", "Tic-Tac-Toe/Tic_Tac_Toe_Vorschau.html"],
+            ["Table-Tennis", "Tischtennis/Tischtennis_Vorschau.html"]
+        ];
+
+        const container = document.getElementById("button-container");
+        buttons.forEach(([text, link]) => {
+            container.innerHTML += `<button onclick="location.href='${link}'">${text}</button>`;
+        });
+    </script>
+</body>
+</html>

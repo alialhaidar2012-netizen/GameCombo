@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+   <html>
+     <head>
+      <title>Endless Runner 3</title>
+      <link rel="manifest" href="../manifest.json" />
+       <style>
+      *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+        #canvas{
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+        html, body{
+          width: 100%;
+          height:100%;
+          overflow: hidden;
+          background: #000;
+        }
+      </style>
+     </head>
+     <body>
+<canvas id="canvas" width="640" height="480"></canvas>
+<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
+
+     <script>
+     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedRunner") !== "true") {
+    window.location.replace("Endless_Runner_Tutorial.html");
+    }
+var canvas= document.getElementById("canvas");
+var ctx= canvas.getContext("2d");
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+function Boden(x, höhe) {
+   this.x= x;
+   this.breite= 700;
+   this.höhe= höhe;
+}
+var welt= {
+    höhe: 480,
+    breite: 640,
+    schwerkraft: 10,
+    höchste: 240,
+    speed: 5,
+    strecke: 0,
+    maxSpeed: 15,
+    anzahlKacheln: 0,
+    autoScroll: true,
+
+    bodenKacheln: [
+    new Boden(0, 140)
+    ],
+stopp: async function() {
+     this.autoScroll= false;
+     if(strecke >= 35000){
+      let level = 3;
+     const result = await spielBeenden("E-R", level, true);
+     localStorage.setItem("Score", strecke);
+     localStorage.setItem("Trophies", result.erhalteneTrophies);
+     localStorage.setItem("Victory", "true")
+     window.location.replace("../Victory.html");
+     }else{
+     let level = 3;
+     const result = await spielBeenden("E-R", level, false);
+     localStorage.setItem("Score", strecke);
+     localStorage.setItem("Trophies", result.erhalteneTrophies);
+     localStorage.setItem("Victory", "false")
+     window.location.replace("../Game_Over.html");
+     }
+},
+bewegeBoden: function() {
+    for(let kachel of this.bodenKacheln) {
+        kachel.x -= this.speed;
+        this.strecke += this.speed;
+                                                                                                                                                                                                                                                            }
+},
+neueKacheln: function() {
+ if(this.bodenKacheln.length >= 3){
+    return;
+    }
+    var vorigeKachel = this.bodenKacheln[this.bodenKacheln.length-1];
+    var größteErreichbareHöhe = vorigeKachel.höhe + spieler.höhe * 3.5;
+    if(größteErreichbareHöhe > this.höchste){
+       größteErreichbareHöhe = this.höchste;
+     }
+    var zufallsHöhe = Math.floor(Math.random() * größteErreichbareHöhe) + spieler.höhe;
+    var x = (vorigeKachel.x + vorigeKachel.breite);
+    var nächste = new Boden(x, zufallsHöhe);
+    this.bodenKacheln.push(nächste);
+},
+entsorgeKacheln: function() {
+    for(let index= this.bodenKacheln.length-1; index>= 0; index--) {
+        if(this.bodenKacheln[index].x <= -this.bodenKacheln[index].breite) {
+           this.bodenKacheln.splice(index, 1)
+           if(this.anzahlKacheln % 3 == 0 && this.speed < this.maxSpeed){
+             this.speed ++;
+       }
+     }
+   }
+},
+höheDesBodens: function(spielerX){
+    for(index in this.bodenKacheln) {
+        var kachel = this.bodenKacheln[index];
+        if(kachel.x <= spielerX && kachel.x + kachel.breite>= spielerX){
+           return kachel.höhe;
+        }
+      }
+    return -1;
+},
+tick: function() {
+   if(!this.autoScroll){
+         return;
+   };
+   this.entsorgeKacheln();
+   this.neueKacheln();
+   this.bewegeBoden();
+},
+zeichne: function() {
+   ctx.fillStyle= "black";
+   ctx.fillRect(0, 0, this.breite, this.höhe);
+   for(let kachel of this.bodenKacheln) {
+       let y= welt.höhe - kachel.höhe;
+       ctx.fillStyle= "blue";
+       ctx.fillRect(kachel.x, y, kachel.breite, kachel.höhe);
+   }
+ctx.fillStyle= "white";
+ctx.font= "28px Arial";
+ctx.fillText("speed: " + this.speed, 10, 40);
+ctx.fillText("score: " + this.strecke, 10, 75);
+ }
+};
+var spieler= {
+    x: 160,
+    y: 340,
+    höhe: 20,
+    breite: 20,
+    kraftNachUnten: welt.schwerkraft,
+    sprunghöhe:0,
+    berechneAbstandZumBoden: function(x){
+       var bodenHöhe = welt.höheDesBodens(x);
+       return welt.höhe - this.y - bodenHöhe;
+    },
+
+    wendeSchwerkraftAn: function(){
+        this.abstandZumBoden = this.berechneAbstandZumBoden(this.x)
+        var abstandZumBodenRechts = this.berechneAbstandZumBoden(this.x+ this.breite)
+         if(this.abstandZumBoden < 0 || abstandZumBodenRechts<0) {
+            welt.stopp();
+       }
+     },
+    verarbeiteSchwerkraft: function() {
+       this.y += this.kraftNachUnten;
+       var bodenHöhe = welt.höheDesBodens(this.x);
+       var yOberseiteBoden = welt.höhe - bodenHöhe;
+       if(this.y > yOberseiteBoden){
+           this.y = yOberseiteBoden;
+       } 
+       if(this.kraftNachUnten<0){
+            this.sprunghöhe += (this.kraftNachUnten * -1);
+            if(this.sprunghöhe >= spieler.höhe * 6){
+                 this.kraftNachUnten = welt.schwerkraft;
+                 this.sprunghöhe = 0;
+            } 
+    }
+},
+tasteGedrückt: function(keyInfo){
+   var bodenHöhe = welt.höheDesBodens(this.x)
+   var aufDemBoden = bodenHöhe == (welt.höhe - this.y);
+   if(aufDemBoden) {
+        this.kraftNachUnten = -8;
+   }
+},
+tick: function() {
+      this.verarbeiteSchwerkraft();
+      this.wendeSchwerkraftAn();
+      },
+
+    zeichne: function() {
+      ctx.fillStyle= "green";
+      ctx.fillRect(spieler.x, spieler.y-spieler.höhe, spieler.höhe, spieler.breite);
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+  };
+window.addEventListener("keypress", function(keyInfo) {spieler.tasteGedrückt(keyInfo);}, false); 
+window.addEventListener("click", function(keyInfo) {spieler.tasteGedrückt(keyInfo);}, false);
+function tick() {
+  spieler.tick();
+  welt.tick();
+  
+  var scaleX = canvas.width / welt.breite;
+  var scaleY = canvas.height / welt.höhe;
+  ctx.save();
+  ctx.scale(scaleX, scaleY);
+  
+  welt.zeichne();
+  spieler.zeichne();
+  
+  ctx.restore();
+  
+  window.setTimeout(tick, 1000 / 60);
+}
+tick();
+     </script>
+     </body>
+   </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Super Cat Vorschau</title>
+    <link rel="manifest" href="../manifest.json" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; background-color: darkblue; font-family: sans-serif; }
+        .button-container { display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 20px; min-height: 100vh; justify-content: center; }
+        .buttons { width: 250px; height: 60px; font-size: 18px; font-weight: 600; background-color: darkgreen; color: yellow; border: none; border-radius: 8px; cursor: pointer; }
+        .buttons:hover { background-color: orange; }
+        .top-left-buttons { position: fixed; top: 20px; left: 20px; z-index: 10; display: flex; flex-direction: column; gap: 8px; }
+        .small-btn { width: 100px; height: 36px; font-size: 14px; font-weight: 600; background-color: darkgreen; color: yellow; border: none; border-radius: 8px; cursor: pointer; }
+        .small-btn:hover { background-color: orange; }
+    </style>
+</head>
+<body>
+    <div class="top-left-buttons">
+        <button class="small-btn" onclick="window.location.href='../index.html'">Back</button>
+        <button class="small-btn" onclick="window.location.href='SteuerungSuperCat.html'">Tutorial</button>
+    </div>
+    <div class="button-container" id="container"></div>
+    <script>
+        const container = document.getElementById("container");
+        const buttons = [["Level 1", "./Super_Cat_1.html"]];
+        buttons.forEach(([text, link]) => {
+            const btn = document.createElement("button");
+            btn.className = "buttons";
+            btn.textContent = text;
+            btn.onclick = function() {
+                sessionStorage.clear();
+                sessionStorage.setItem("currentLevel", link);
+                window.location.href = link;
+            };
+            container.appendChild(btn);
+        });
+    </script>
+</body>
+</html>

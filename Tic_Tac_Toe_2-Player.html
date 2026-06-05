@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+  <head>
+   <title>Tic-Tac-Toe</title>
+   <link rel="manifest" href="../manifest.json" />
+   <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: lightgray;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Turn-Anzeige */
+#turn {
+    position: absolute;
+    top: 3vmin;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: darkblue;
+    color: yellow;
+    padding: 2vmin 5vmin;
+    border-radius: 3vmin;
+    font-size: 4vmin;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    z-index: 5;
+    white-space: nowrap;
+}
+
+#spielfeld {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.zeile {
+    clear: both;
+    white-space: nowrap;
+}
+.zeile div {
+    padding: 10px;
+    border: 1px solid black;
+    width: 25vmin;
+    height: 25vmin;
+    display: inline-block;
+    font-size: 10vmin;
+    background: white;
+    text-align: center;
+    line-height: 25vmin;
+    vertical-align: top;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.zeile div:hover {
+    background-color: #f0f0f0;
+}
+.zeile div:active {
+    background-color: #ddd;
+}
+   </style>
+  </head>
+  <body>
+  <div id="turn"></div>
+  <br>
+  <div id="spielfeld">
+<div class="zeile">
+     <div id="0_0" onclick="setze(this)"></div>
+     <div id="1_0" onclick="setze(this)"></div>
+     <div id="2_0" onclick="setze(this)"></div>
+   </div>
+<div class="zeile">
+     <div id="0_1" onclick="setze(this)"></div>
+     <div id="1_1" onclick="setze(this)"></div>
+     <div id="2_1" onclick="setze(this)"></div>
+   </div>
+<div class="zeile">
+     <div id="0_2"onclick="setze(this)"></div>
+     <div id="1_2" onclick="setze(this)"></div>
+     <div id="2_2" onclick="setze(this)"></div>
+   </div>
+ </div>
+ 
+<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
+<script>
+    if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTTT") !== "true") {
+      window.location.replace("Tic-Tac-Toe_Tutorial.html");
+    }
+  let level = 1;
+  let zuege = 0;
+  let gewonnen = false;
+  let aktuellerSpieler = "O";
+  function setze(kästchen) {
+     if (kästchen.innerText != "" || gewonnen) return;
+     zuege++;
+     turn.innerText = "Player "+aktuellerSpieler+"'s turn"
+     kästchen.innerText = aktuellerSpieler;
+     aktuellerSpieler == "O" ? aktuellerSpieler = "X" : aktuellerSpieler = "O";
+     pruefeSpielfeld();
+     }
+  function pruefeSpielfeld() {
+   for(var i = 0; i <= 2; i++){
+        pruefeGewonnen(document.getElementById("0_"+ i).innerText,
+                       document.getElementById("1_"+ i).innerText,
+                       document.getElementById("2_"+ i).innerText);
+        pruefeGewonnen(document.getElementById(i + "_0").innerText,
+                       document.getElementById(i + "_1").innerText,
+                       document.getElementById(i + "_2").innerText);
+ 
+        }
+        pruefeGewonnen(document.getElementById("0_0").innerText,
+                       document.getElementById("1_1").innerText,
+                       document.getElementById("2_2").innerText);
+        pruefeGewonnen(document.getElementById("0_2").innerText,
+                       document.getElementById("1_1").innerText,
+                       document.getElementById("2_0").innerText);
+
+     }
+  function pruefeGewonnen(erstes, zweites, drittes) {
+     if(erstes != "" && erstes == zweites && erstes == drittes && erstes == "X") {
+       giveTrophie(spielName, level, gewonnen);
+         window.location.replace("../VictoryX.html");
+         gewonnen = true;
+       }else if(erstes != "" && erstes == zweites && erstes == drittes && erstes == "O") {
+         giveTrophie("TTT_2P", level, gewonnen);
+         window.location.replace("../VictoryO.html");
+         gewonnen = true;
+    }else if(zuege >= 9 && !gewonnen){
+    giveTrophie("TTT_2P", level, false);
+    window.location.replace("../Draw.html");
+    gewonnen = true;
+    }
+  }
+  async  function giveTrophie(spielName, level, gewonnen){
+      const result = await spielBeenden("TTT_2P", level, gewonnen);
+      localStorage.setItem("Trophies", result.erhalteneTrophies);
+      localStorage.setItem("Victory", gewonnen? "true" : "false");
+      
+    }
+  </script>
+  </body>
+  </html>
+  

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Tic-Tac-Toe - How to Play</title>
+    <link rel="manifest" href="../manifest.json" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; background-color: darkblue; padding: 4vmin; font-family: Arial, Helvetica, sans-serif; }
+        .container { display: flex; flex-direction: column; align-items: center; gap: 4vmin; padding-bottom: 4vmin; padding-top: 60px; }
+        .box { background-color: rgba(255,255,255,0.1); border: 3px solid yellow; border-radius: 3vmin; padding: 4vmin; color: yellow; font-size: 4vmin; font-weight: bold; text-align: center; width: 90vw; max-width: 500px; box-shadow: 0 0 20px rgba(255,255,0,0.3); }
+        .box h2 { font-size: 7vmin; margin-bottom: 3vmin; text-decoration: underline; }
+        .player-o { color: #44aaff; font-weight: 900; font-size: 5vmin; }
+        .player-x { color: #ff4444; font-weight: 900; font-size: 5vmin; }
+        .green { color: #44ff44; }
+        .red { color: #ff4444; }
+        .grid { display: inline-block; border: 2px solid yellow; border-radius: 1vmin; padding: 2vmin; margin: 2vmin 0; font-size: 5vmin; line-height: 1.8; letter-spacing: 1vmin; }
+        .trophy-table { width: 100%; border-collapse: collapse; margin-top: 2vmin; font-size: 3.5vmin; }
+        .trophy-table th { background-color: yellow; color: darkblue; padding: 1.5vmin; border: 1px solid black; }
+        .trophy-table td { padding: 1.5vmin; border: 1px solid yellow; }
+        .trophy-table .win { color: #44ff44; }
+        .trophy-table .lose { color: #ff4444; }
+        .btn-container { display: flex; gap: 3vmin; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 2vmin 5vmin; font-size: 4vmin; font-weight: bold; border: 2px solid black; border-radius: 2vmin; cursor: pointer; font-family: Arial, Helvetica, sans-serif; }
+        .btn-play { background-color: yellow; color: darkblue; }
+        .btn-never { background-color: #ffcc00; color: black; }
+        .back-btn { position: fixed; top: 20px; left: 20px; width: 100px; height: 36px; font-size: 14px; font-weight: 600; background-color: darkgreen; color: yellow; border: none; border-radius: 8px; cursor: pointer; z-index: 10; }
+        .back-btn:hover { background-color: orange; }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='Tic_Tac_Toe_Vorschau.html'">Back</button>
+    <div class="container">
+        <div class="box">
+            <h2>Trophies – 2 Players</h2>
+            <table class="trophy-table">
+                <tr><th>Result</th><th class="win">Trophies</th></tr>
+                <tr><td>X or O wins</td><td class="win">+1</td></tr>
+                <tr><td>Draw</td><td class="lose">-1</td></tr>
+            </table>
+        </div>
+        <div class="box">
+            <h2>Trophies – VS Computer</h2>
+            <table class="trophy-table">
+                <tr><th>Result</th><th class="win">Trophies</th></tr>
+                <tr><td>You win</td><td class="win">+1</td></tr>
+                <tr><td>Computer wins</td><td class="lose">-1</td></tr>
+                <tr><td>Draw</td><td class="lose">-1</td></tr>
+            </table>
+        </div>
+        <div class="box">
+            <h2>2 Players</h2>
+            <p><span class="player-o">Player O</span> goes first, then <span class="player-x">Player X</span>.</p>
+            <div class="grid"><span class="player-o">O</span> |   | <span class="player-x">X</span><br>  | <span class="player-o">O</span> |   <br><span class="player-x">X</span> |   | </div>
+        </div>
+        <div class="box">
+            <h2>VS Computer</h2>
+            <p><span class="player-o">Computer (O)</span> goes first. You are <span class="player-x">X</span>.</p>
+        </div>
+        <div class="box">
+            <h2>How to Win</h2>
+            <p>3 in a row – horizontal, vertical, or diagonal!</p>
+        </div>
+        <div class="btn-container">
+            <button class="btn btn-play" onclick="startGame()">Play against Computer</button>
+        </div>
+    </div>
+    <script>
+        let level = sessionStorage.getItem("currentLevel");
+        function startGame() {
+            sessionStorage.setItem("skipTutorial", "true");
+            window.location.replace("Tic_Tac_Toe_KI.html");
+        }
+    </script>
+</body>
+</html>

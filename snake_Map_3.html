@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>snake-Map2</title>
+  <link rel="manifest" href="../manifest.json" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: lightgray; }
+        #canvas {
+            display: block;
+            position: absolute;
+        }
+        #points {
+            position: absolute; top: 3vmin; left: 50%; transform: translateX(-50%);
+            background-color: darkblue; color: yellow; padding: 2vmin 5vmin;
+            border-radius: 3vmin; font-size: 4vmin; font-weight: bold;
+            text-align: center; z-index: 5; white-space: nowrap;
+        }
+        .buttons {
+            width: 12vmin; height: 12vmin;
+            border: 2px solid black;
+            background-color: yellow;
+            color: black;
+            position: fixed;
+            z-index: 2;
+            font-size: 5vmin;
+            font-weight: bold;
+            border-radius: 2vmin;
+            bottom: 5vmin;
+        }
+        #Oben { left: 5vmin; bottom: 18vmin; }
+        #Unten { left: 5vmin; bottom: 4vmin; }
+        #Links { right: 17vmin; bottom: 11vmin; }
+        #Rechts { right: 3vmin; bottom: 11vmin; }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1024" height="1024"></canvas>
+<div id="points"></div>
+<button id="Oben" class="buttons">W</button>
+<br>
+<button id="Links" class="buttons">A</button>
+<button id="Unten" class="buttons">S</button>
+<button id="Rechts" class="buttons">D</button>
+<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
+<script>
+    if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedSnake") !== "true") {
+      window.location.replace("Snake_Tutorial.html");
+    }
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+window.addEventListener('load',function(){
+  console.log("You are Connected to the server"); 
+},false);
+
+Oben.addEventListener("click", function() {
+    if (schlange.richtung != "S") { schlange.richtung = "N"; spiel.tick(); }
+});
+Unten.addEventListener("click", function() {
+    if (schlange.richtung != "N") { schlange.richtung = "S"; spiel.tick(); }
+});
+Links.addEventListener("click", function() {
+    if (schlange.richtung != "O") { schlange.richtung = "W"; spiel.tick(); }
+});
+Rechts.addEventListener("click", function() {
+    if (schlange.richtung != "W") { schlange.richtung = "O"; spiel.tick(); }
+});
+var spiel = {
+    anzahlTicks: 0,
+    timer: null,
+    punkte: 0,
+    spielfeld: [
+"###############",
+"#             #",
+"#             #",
+"#      #      #",
+"#      #      #",
+"#             #",
+"#      #      #",
+"#      #      #",
+"#      #      #",
+"#      #      #",
+"###############"
+    ],  
+früchte:[
+  {x:1, y:1}
+ ],
+ 
+tick: async function() {
+  window.clearTimeout(spiel.timer);
+  spiel.anzahlTicks++;
+  if (spiel.anzahlTicks % 10 == 0) {
+    spiel.neueZufallsfrucht();
+  }
+  var scaleX = canvas.width / welt.breite;
+  var scaleY = canvas.height / welt.höhe;
+  ctx.save();
+  ctx.scale(scaleX, scaleY);
+  
+  var ergebnis = schlange.gehe();
+  if (ergebnis == "Ende") {
+    let level = 1;
+    if (spiel.punkte >= 10) {
+      const result = await spielBeenden("snake", level, true);
+      localStorage.setItem("Score", spiel.punkte);
+      localStorage.setItem("Trophies", result.erhalteneTrophies);
+      localStorage.setItem("Victory", "true");
+      window.location.replace("../Victory.html");
+    } else {
+      const result = await spielBeenden("snake", level, false);
+      localStorage.setItem("Score", spiel.punkte);
+      localStorage.setItem("Trophies", result.erhalteneTrophies);
+      localStorage.setItem("Victory", "false");
+      window.location.replace("../Game_Over.html");
+    }
+    return;
+  }
+  
+  grafik.zeichneSpiel();
+  ctx.restore();
+  spiel.timer = window.setTimeout(function() { spiel.tick(); }, 500);
+},
+neueZufallsfrucht: function() {
+ var zufallY = Math.floor(Math.random() * spiel.spielfeld.length) +0
+ var zufallX = Math.floor(Math.random() * spiel.spielfeld[zufallY].length) +0
+ var zufallsort= {x: zufallX, y: zufallY}
+if(spiel.istFrei(zufallsort) && !spiel.istFrucht(zufallsort)) {
+   spiel.früchte.push(zufallsort);
+     }
+    },
+istFrei: function(ort){
+  return spiel.spielfeld[ort.y][ort.x]== " ";
+},
+istWand: function(ort){
+  return spiel.spielfeld[ort.y][ort.x]== "#";
+},
+istSchlange: function(ort) {
+  for(var teilNr = 0; teilNr < schlange.teile.length; teilNr++) {
+       var teil = schlange.teile[teilNr];
+       if(ort.x== teil.x && ort.y == teil.y) {
+          return true;
+       }
+    }
+ return false;
+},
+istFrucht: function(ort) {
+   for(var fruchtNr= 0; fruchtNr < spiel.früchte.length; fruchtNr++) {
+       var frucht = spiel.früchte[fruchtNr]
+       if(ort.x== frucht.x && ort.y== frucht.y){
+          spiel.früchte.splice(fruchtNr, 1);
+          return true;
+   }
+ }
+   return false;
+} 
+};
+
+
+var schlange = {
+teile: [
+  {x:4, y:2},
+  {x:3, y:2},
+  {x:2, y:2}
+],
+richtung:"O",
+nächsterOrt: function() {
+ var kopf= schlange.teile[0];
+ var zielX= kopf.x;
+ var zielY= kopf.y;
+zielY= schlange.richtung == "N" ? zielY-1: zielY;
+zielY= schlange.richtung == "S" ? zielY+1: zielY;
+zielX= schlange.richtung == "W" ? zielX-1: zielX;
+zielX= schlange.richtung == "O" ? zielX+1: zielX;
+return {x: zielX, y:zielY};
+},
+gehe: function() {
+var ort= schlange.nächsterOrt();
+
+ if(spiel.istWand(ort) || spiel.istSchlange(ort)){
+     return "Ende";
+  }
+
+if(spiel.istFrei(ort)){
+schlange.teile.unshift(ort);
+schlange.teile.pop();
+  }  
+
+   if (spiel.istFrucht(ort)) {
+     spiel.punkte++;
+     points.innerText = spiel.punkte + " out of 10 points"
+     schlange.teile.unshift(ort);
+   }
+   if (spiel.punkte === 0) {
+     points.innerText = spiel.punkte + " out of 10 points"
+   }
+ }                                                                                                                                                                           
+};
+var welt = {
+  breite: 480,
+  höhe: 330
+}
+var grafik= {
+    canvas:document.getElementById("canvas"),
+    größeQuadrat: 30,
+    
+     zeichneSpielfeld: function(ctx) {
+        
+        var y = 0;
+     spiel.spielfeld.forEach(function prüfeZeile(string){
+            var zeile = string.split("");
+            var x = 0;
+
+            zeile.forEach(function prüfeZeile(zeichen) {
+                if (zeichen == "#") {
+                    ctx.fillStyle = "black";
+                    ctx.fillRect(x, y, grafik.größeQuadrat, grafik.größeQuadrat);
+                }
+                x += grafik.größeQuadrat;
+            });
+
+            y += grafik.größeQuadrat;
+        });
+     },
+
+zeichne: function(ctx, quelle, farbe) {
+    quelle.forEach(function(teil){
+     var teilXOrt = teil.x * grafik.größeQuadrat;
+     var teilYOrt = teil.y * grafik.größeQuadrat;
+     ctx.fillStyle= farbe;
+     ctx.fillRect(teilXOrt, teilYOrt,
+                    grafik.größeQuadrat, grafik.größeQuadrat);
+   });
+ },
+
+zeichneSpiel: function() {
+   var ctx = grafik.canvas.getContext("2d");
+   ctx.clearRect(0,0, grafik.canvas.width, grafik.canvas.height);
+   grafik.zeichneSpielfeld(ctx);
+   grafik.zeichne(ctx, spiel.früchte, "red");
+   grafik.zeichne(ctx, schlange.teile, "green");
+   }
+};
+    function resizeCanvas() {
+      var verhältnis = welt.breite / welt.höhe;
+      if (window.innerWidth / window.innerHeight > verhältnis) {
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerHeight * verhältnis;
+      } else {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerWidth / verhältnis;
+      }
+      canvas.style.left = (window.innerWidth - canvas.width) / 2 + "px";
+      canvas.style.top = (window.innerHeight - canvas.height) / 2 + "px";
+    }
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+grafik.zeichneSpiel();
+
+
+
+var spielSteuerung = {
+
+    verarbeiteEingabe: function(keyPressed){
+      var taste = keyPressed.key.toLowerCase(); // toLowerCase ist dafür da den Buchstaben der gedrückten Taste in einen Kleinbuchstaben umzuwandeln
+      var zielRichtung = schlange.richtung;
+      if(taste=="w" && schlange.richtung != "S") zielRichtung="N";
+      if(taste=="d" && schlange.richtung != "W") zielRichtung="O";
+      if(taste=="s" && schlange.richtung != "N") zielRichtung="S";
+      if(taste=="a" && schlange.richtung != "O") zielRichtung="W";
+      schlange.richtung = zielRichtung;
+      spiel.tick();
+     },
+    starteSpiel: function() {
+       window.addEventListener("keypress",
+                                spielSteuerung.verarbeiteEingabe, false);
+        spiel.tick();
+  }
+};
+
+spielSteuerung.starteSpiel();
+</script>
+</body>
+</html>

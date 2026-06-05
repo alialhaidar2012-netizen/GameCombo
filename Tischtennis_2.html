@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+    <head>
+     <title>Tischtennis</title>
+     <link rel="manifest" href="../manifest.json" />
+     <style>
+      *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+        #canvas{
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+        html, body{
+          width: 100%;
+          height:100%;
+          overflow: hidden;
+          background: #000;
+        }
+      </style>
+    </head>
+    <body>
+<canvas id="canvas" width="640" height="480"></canvas>
+<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
+    <script>
+        if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTischtennis") !== "true") {
+        window.location.replace("Tischtennis_Tutorial.html");
+    }
+
+var canvas=document.getElementById("canvas");
+var ctx= canvas.getContext("2d"); 
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+async function tick() {
+    await aktualisiereSpiel();
+    var scaleX = canvas.width / 640;
+    var scaleY = canvas.height / 480;
+    ctx.save();
+    ctx.scale(scaleX, scaleY);
+    zeichne();
+    ctx.restore();
+    window.setTimeout(tick, 1000 / 60);
+}
+async function aktualisiereSpiel() {
+    ball.x += ball.xSpeed;
+    ball.y += ball.ySpeed;
+    var kollidiertMitSpieler = spieler.istKollidiertMit(ball);
+    var kollidiertMitKi = ki.istKollidiertMit(ball);
+    if (ball.x <= 0 || ball.x >= 640) {
+        await ball.reset();
+        return;
+    }
+    if (ball.y <= 0 || ball.y >= 480) {
+        ball.yUmkehren();
+    }
+    
+    if (spieler.istKollidiertMit(ball) || ki.istKollidiertMit(ball)) {
+        ball.xUmkehren();
+        ball.ändereXSpeedUm(0.25);
+        var beschleunigung = kollidiertMitSpieler ?
+            spieler.speedModifizierer : ki.speedModifizierer;
+        ball.ändereYSpeedUm(beschleunigung);
+        
+    }
+    for (var tastencode in gedrückt) {
+        spieler.gehe(tastencode);
+    }
+    var kiMitte = ki.y + (ki.höhe / 2);
+    if (kiMitte < ball.y) {
+        ki.gehe(40);
+    }
+    if (kiMitte > ball.y) {
+        ki.gehe(38)
+    }
+}
+
+function zeichne(){
+ctx.fillStyle="black";
+ctx.fillRect(0,0,640,480);
+zeichneSchläger(spieler);
+zeichneSchläger(ki);
+zeichneBall(ball);
+}
+function Schläger(x,y,breite,höhe, ki=false, spieler= false){
+   this.x=x;
+   this.y=y;
+   this.breite=breite;
+   this.höhe=höhe;
+   this.speedModifizierer= 0;
+   this.ki = ki;
+   this.spieler = spieler;
+   this.istKollidiertMit= function(ball) {
+   var linkeKante= this.x;
+   var rechteKante= this.x+ this.breite;
+   var oberkante = this.y;
+   var unterkante = this.y+ this.höhe;
+   if(ball.x >linkeKante 
+      && ball.x < rechteKante
+      && ball.y > oberkante
+      && ball.y < unterkante) {
+       return true;
+    }
+   return false;
+  };
+  this.gehe= function(tastencode){
+       var yNeu = this.y;
+       if(tastencode == 40 && this.ki) {
+           yNeu += 6;
+           this.speedModifizierer = 2.0; 
+       }else if(tastencode == 38 && this.ki){
+           yNeu += -6;
+           this.speedModifizierer = 2.0;
+       } else if (tastencode == 40 && this.spieler) {
+           yNeu += 5;
+           this.speedModifizierer = 1.5;
+       } else if (tastencode == 38 && this.spieler) {
+           yNeu += -5;
+           this.speedModifizierer = 1.5;
+       }else{
+           this.speedModifizierer = 0;
+       }
+        yNeu = yNeu < 0 ? 0 : yNeu;
+        yNeu = yNeu + this.höhe > 480 ? 480 - this.höhe : yNeu;
+        this.y = yNeu; 
+ };
+}
+var spieler= new Schläger(5,200,25,100,false,true);
+var ki= new Schläger(610, 200, 25, 100,false,true);
+
+let startY = 0;
+document.addEventListener("touchstart", function(event) {
+    event.preventDefault();
+    spieler.y = event.touches[0].clientY;
+});
+
+document.addEventListener("touchmove", function(event) {
+    event.preventDefault();
+    spieler.y = event.touches[0].clientY;
+    if (spieler.y < 0) spieler.y = 0;
+    if (spieler.y + spieler.höhe > 480) spieler.y = 480 - spieler.höhe;
+});
+
+var ball= {
+x:320, y:240, radius:10, xSpeed: 3, ySpeed: 0,
+xUmkehren: function() {
+    this.xSpeed *= -1;
+  },
+yUmkehren: function() {
+    this.ySpeed *= -1;
+  },
+  reset: async function() {
+    if (this.x == 0 || this.x < 0) {
+        let level = 2;
+        const result = await spielBeenden("Tischtennis", level, false);
+        localStorage.setItem("Trophies", result.erhalteneTrophies);
+        localStorage.setItem("Victory", "false");
+        window.location.replace("../Game_Over.html");
+    } else {
+        let level = 2;
+        const result = await spielBeenden("Tischtennis", level, true);
+        localStorage.setItem("Trophies", result.erhalteneTrophies);
+        localStorage.setItem("Victory", "true");
+        window.location.replace("../Victory.html");
+              }
+  },
+pralltAb: function(){
+    return this.ySpeed != 0;
+  },
+ändereXSpeedUm: function(änderung){
+    änderung = this.xSpeed < 0 ? änderung * -1 : änderung; 
+    var nächsterWert = this.xSpeed + änderung;
+    nächsterWert = Math.abs(nächsterWert) > 9 ? 9: nächsterWert;
+    this.xSpeed = nächsterWert;
+  },
+ändereYSpeedUm: function(änderung){
+    änderung = this.ySpeed < 0 ? änderung * -1 : änderung;
+    this.ySpeed += änderung;
+  }
+};
+function zeichneSchläger(schläger) {
+   ctx.fillStyle="white";
+   ctx.fillRect(schläger.x, schläger.y, schläger.breite, schläger.höhe);
+}
+function zeichneBall(ball) {
+    ctx.beginPath();  
+    ctx.arc(ball.x, ball.y, ball.radius, 0, 2*Math.PI, false);                                                                                                                                   
+    ctx.fillStyle="white";
+    ctx.fill(); 
+} 
+var gedrückt = {};
+window.addEventListener("keydown" , function(keyInfo){gedrückt[keyInfo.keyCode] = true;}, false);
+window.addEventListener("keyup" , function(keyInfo){delete gedrückt[keyInfo.keyCode]; }, false);                            
+tick(); 
+    </script>
+    </body>
+</html>

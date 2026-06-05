@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Table Tennis - How to Play</title>
+    <link rel="manifest" href="../manifest.json" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; background-color: darkblue; padding: 4vmin; font-family: Arial, Helvetica, sans-serif; }
+        .container { display: flex; flex-direction: column; align-items: center; gap: 4vmin; padding-bottom: 4vmin; }
+        .box { background-color: rgba(255,255,255,0.1); border: 3px solid yellow; border-radius: 3vmin; padding: 4vmin; color: yellow; font-size: 4vmin; font-weight: bold; text-align: center; width: 90vw; max-width: 500px; box-shadow: 0 0 20px rgba(255,255,0,0.3); }
+        .box h2 { font-size: 7vmin; margin-bottom: 3vmin; text-decoration: underline; }
+        .row { display: flex; align-items: center; justify-content: center; gap: 2vmin; margin: 2vmin 0; }
+        .key { display: inline-block; background-color: yellow; color: darkblue; padding: 2vmin 4vmin; border-radius: 1.5vmin; font-weight: 900; font-size: 5vmin; box-shadow: 3px 3px 0 rgba(0,0,0,0.3); }
+        .green { color: #44ff44; font-weight: 900; }
+        .red { color: #ff4444; font-weight: 900; }
+        .yellow-text { color: #ffcc00; font-weight: 900; }
+
+        .trophy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2vmin;
+            font-size: 3.5vmin;
+        }
+        .trophy-table th {
+            background-color: yellow;
+            color: darkblue;
+            padding: 1.5vmin;
+            border: 1px solid black;
+        }
+        .trophy-table td {
+            padding: 1.5vmin;
+            border: 1px solid yellow;
+        }
+        .trophy-table .win { color: #44ff44; }
+        .trophy-table .lose { color: #ff4444; }
+
+        .btn-container { display: flex; gap: 3vmin; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 2vmin 5vmin; font-size: 4vmin; font-weight: bold; border: 2px solid black; border-radius: 2vmin; cursor: pointer; box-shadow: 4px 4px 0 rgba(0,0,0,0.3); font-family: Arial, Helvetica, sans-serif; }
+        .btn-play { background-color: yellow; color: darkblue; }
+        .btn-never { background-color: #ffcc00; color: black; }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Trophäen-Tabelle -->
+        <div class="box">
+            <h2>🏆 Trophies per Level</h2>
+            <table class="trophy-table">
+                <tr>
+                    <th>Level</th>
+                    <th class="win">🏆 Win</th>
+                    <th class="lose">❌ Lose</th>
+                </tr>
+                <tr>
+                    <td>Level 1</td>
+                    <td class="win">+1 🏆</td>
+                    <td class="lose">-1 🏆</td>
+                </tr>
+                <tr>
+                    <td>Level 2</td>
+                    <td class="win">+2 🏆</td>
+                    <td class="lose">-2 🏆</td>
+                </tr>
+                <tr>
+                    <td>Level 3</td>
+                    <td class="win">+3 🏆</td>
+                    <td class="lose">-3 🏆</td>
+                </tr>
+                <tr>
+                    <td>Level 4</td>
+                    <td class="win">+4 🏆</td>
+                    <td class="lose">-4 🏆</td>
+                </tr>
+                <tr>
+                    <td>Level 5</td>
+                    <td class="win">+5 🏆</td>
+                    <td class="lose">-5 🏆</td>
+                </tr>
+            </table>
+            <p style="margin-top: 2vmin; font-size: 3vmin;">
+                Score a goal = <span class="green">get trophies</span><br>
+                Enemy scores = <span class="red">lose trophies</span>
+            </p>
+        </div>
+
+        <div class="box">
+            <h2>🏓 Who Are You?</h2>
+            <p>You are the <span class="green">left paddle</span>.</p>
+            <p>Your enemy is the <span class="red">right paddle</span> (computer).</p>
+        </div>
+
+        <div class="box">
+            <h2>⌨️ Keyboard</h2>
+            <div class="row"><span class="key">↑</span><span>= Move Up</span></div>
+            <div class="row"><span class="key">↓</span><span>= Move Down</span></div>
+        </div>
+
+        <div class="box">
+            <h2>📱 Touch</h2>
+            <p>Touch your paddle and drag up/down.</p>
+        </div>
+
+        <div class="box">
+            <h2>🏆 How to Win</h2>
+            <p>Hit the ball past the <span class="red">enemy</span> on the right side!</p>
+            <p style="margin-top:2vmin;">⚠️ <span class="red">Do NOT</span> let the ball go past you!</p>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-play" onclick="startGame()">▶ Play Game</button>
+            <button class="btn btn-never" onclick="neverShow()">✕ Don't show again</button>
+        </div>
+    </div>
+    <script>
+        var level = sessionStorage.getItem("currentLevel") || "Tischtennis_1.html";
+        function startGame() { sessionStorage.setItem("skipTutorial", "true"); window.location.replace(level); }
+        function neverShow() { localStorage.setItem("tutorialSkippedTischtennis", "true"); window.location.replace(level); }
+    </script>
+</body>
+</html>
