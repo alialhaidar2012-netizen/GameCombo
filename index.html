@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Game-Verse</title>
-    <link rel="manifest" href="./Games/manifest.json" />
-    <script src="Rangliste_und_Anmelden.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <title>GameCombo</title>
+    <link rel="manifest" href="manifest.json" />
+    <script src="Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
+    <link rel="stylesheet" href="Games/style.css">
 </head>
 <body>
     
@@ -24,22 +24,23 @@
 
     <script>
         const buttons = [
-            ["Endless-Runner", "Endless-Runner/Endless_Runner_Vorschau.html"],
-            ["Snake", "Snake/Snake_Vorschau.html"],
-            ["Super-Cat", "Super-Cat/Super_Cat_Vorschau.html"],
-            ["Tic-Tac-Toe", "Tic-Tac-Toe/Tic_Tac_Toe_Vorschau.html"],
-            ["Table-Tennis", "Tischtennis/Tischtennis_Vorschau.html"]
+            ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
+            ["Snake", "Games/Snake/snake_Vorschau.html"],
+            ["Super-Cat", "Games/Super-Cat/Super_Cat_Vorschau.html"],
+            ["Tic-Tac-Toe", "Games/Tic-Tac-Toe/Tic_Tac_Toe_Vorschau.html"],
+            ["Table-Tennis", "Games/Tischtennis/Tischtennis_Vorschau.html"]
         ];
 
         const container = document.getElementById("button-container");
         buttons.forEach(([text, link]) => {
             container.innerHTML += `<button onclick="location.href='${link}'">${text}</button>`;
         });
-    if('serviceWorker' in navigator){
-       navigator.serviceWorker.register('/GameCombo/sw.js') 
-       .then(reg => console.log('Service Worker registered', reg))
-       .catch(err => console.error('Service Worker Fehler:', err))
-    }
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/GameCombo/sw.js') 
+                .then(reg => console.log('Service Worker registered', reg))
+                .catch(err => console.error('Service Worker Fehler:', err));
+        }
     </script>
 </body>
 </html>
