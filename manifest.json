@@ -3,12 +3,12 @@
   "background_color":"#0000ff",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "GameCombo/icon-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "icon-512.png",
+      "src": "GameCombo/icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
