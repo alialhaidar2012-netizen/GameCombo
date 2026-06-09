@@ -23,6 +23,12 @@
     </div>
 
     <script>
+        // Prüfen, ob Benutzer eingeloggt ist
+const currentUser = localStorage.getItem("currentUser");
+if (!currentUser) {
+  // Nicht eingeloggt → zur Login-Seite
+  window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
+}
         const buttons = [
             ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
             ["Snake", "Games/Snake/snake_Vorschau.html"],
