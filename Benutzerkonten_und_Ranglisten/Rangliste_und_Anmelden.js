@@ -8,8 +8,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendEmailVerification,
-  onAuthStateChanged,
-  updateDoc,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { 
   getFirestore,
   collection,
   addDoc,
@@ -20,19 +21,18 @@ import {
   serverTimestamp,
   where,
   getDoc,
-  doc
+  doc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBwPGiInieRxjm3_ifiQYUDT5u6k0T5cyM",
   authDomain: "ranglistedaten.firebaseapp.com",
-  databaseURL: "https://ranglistedaten-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "ranglistedaten",
   storageBucket: "ranglistedaten.firebasestorage.app",
   messagingSenderId: "824301650931",
-  appId: "1:824301650931:web:e4a1e8b0a79ef7ee224886",
-  measurementId: "G-WC8EK70CRY"
+  appId: "1:824301650931:web:e4a1e8b0a79ef7ee224886"
 };
 
 // Initialize Firebase
