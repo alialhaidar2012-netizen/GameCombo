@@ -1,4 +1,3 @@
-// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { 
   GoogleAuthProvider,
@@ -25,7 +24,6 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBwPGiInieRxjm3_ifiQYUDT5u6k0T5cyM",
   authDomain: "ranglistedaten.firebaseapp.com",
@@ -41,7 +39,6 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ============ LOGIN WITH GOOGLE ============
 async function loginWithGoogle() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -90,7 +87,6 @@ async function loginWithGoogle() {
   }
 }
 
-// ============ REGISTER WITH EMAIL ============
 async function registerUser(email, username, password) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -119,7 +115,6 @@ async function registerUser(email, username, password) {
   }
 }
 
-// ============ LOGIN WITH EMAIL ============
 async function loginUser(username, password) {
   try {
     const usersRef = collection(db, "users");
@@ -154,7 +149,6 @@ async function loginUser(username, password) {
   }
 }
 
-// ============ LOGOUT ============
 async function logoutUser() {
   try {
     await signOut(auth);
@@ -167,13 +161,11 @@ async function logoutUser() {
   }
 }
 
-// ============ GET CURRENT USER ============
 function getCurrentUser() {
   const user = localStorage.getItem("currentUser");
   return user ? JSON.parse(user) : null;
 }
 
-// ============ AUTH STATE CHANGED ============
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("User is logged in:", user.email);
@@ -183,7 +175,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// ============ ADD TROPHIES ============
 async function addTrophies(spielName, erhalteneTrophies) {
   const currentUser = getCurrentUser();
   if (!currentUser) {
@@ -212,7 +203,6 @@ async function addTrophies(spielName, erhalteneTrophies) {
   });
 }
 
-// ============ GET TROPHIES RANGLISTE ============
 async function getTrophiesRangliste() {
   try {
     const q = query(
@@ -273,7 +263,6 @@ async function meineStatistiken() {
   }
 }
 
-// ============ TROPHIES PER LEVEL ============
 function getTrophiesforLevel(spielName, level) {
   const levelData = {
     "snake": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
@@ -303,7 +292,6 @@ async function spielBeenden(spielName, level, gewonnen) {
   return { success: true };
 }
 
-// ============ EXPORT FUNCTIONS ============
 window.loginWithGoogle = loginWithGoogle;
 window.registerUser = registerUser;
 window.loginUser = loginUser;
