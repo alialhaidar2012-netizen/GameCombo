@@ -3,56 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>GameCombo</title>
+    <title>GameCombo - Deine Spielesammlung</title>
     <link rel="manifest" href="manifest.json" />
-    <script src="Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
     <link rel="stylesheet" href="Games/style.css">
+    <style>
+        /* Zusätzliche Styles für die Hauptseite */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 32px;
+        }
+
+        .game-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .game-buttons button, .special-buttons button {
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .game-buttons button {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: white;
+        }
+
+        .game-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .special-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .special-buttons button {
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        .special-buttons button:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .widgets {
+            background: #e8f0fe;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .widgets h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .widgets div {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .widgets span {
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        @media (max-width: 768px) {
+            #wrapper {
+                padding: 20px;
+            }
+            
+            .game-buttons {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            
+            .game-buttons button {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .widgets h3 {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    
     <div id="wrapper">
-        <div id="button-container"></div>
+        <h1>🎮 GameCombo</h1>
+        
+        <div class="special-buttons" id="special-button-container"></div>
+        
+        <div class="game-buttons" id="button-container"></div>
+        
         <div class="widgets">
-            <h3>Statistics:</h3>
-            <div>Name: <span id="nutzername"></span></div>
-            <div>Trophies: <span id="trophies"></span></div>
-            <div>Played Games: <span id="gespielteSpiele"></span></div>
-            <div>Game Overview: <span id="uebersicht"></span></div>
-            <div>Registered at: <span id="registriertAm"></span></div>
+            <h3>📊 Statistics:</h3>
+            <div>👤 Name: <span id="nutzername"></span></div>
+            <div>🏆 Trophies: <span id="trophies"></span></div>
+            <div>🎮 Played Games: <span id="gespielteSpiele"></span></div>
+            <div>📋 Game Overview: <span id="uebersicht"></span></div>
+            <div>📅 Registered at: <span id="registriertAm"></span></div>
         </div>
     </div>
 
-    <script>
+    <script src="Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js" type="module"></script>
+    <script type="module">
+        import { meineStatistiken, getCurrentUser } from './Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+        
         // Prüfen, ob Benutzer eingeloggt ist
-const currentUser = localStorage.getItem("currentUser");
-if (!currentUser) {
-  // Nicht eingeloggt → zur Login-Seite
-  window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
-}
-        const spezialButtons=[
-          ["Log Out", "Benutzerkonten_und_Ranglisten/logOut.html"]
-        ];
-        const buttons = [
-            ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
-            ["Snake", "Games/Snake/snake_Vorschau.html"],
-            ["Super-Cat", "Games/Super-Cat/Super_Cat_Vorschau.html"],
-            ["Tic-Tac-Toe", "Games/Tic-Tac-Toe/Tic_Tac_Toe_Vorschau.html"],
-            ["Table-Tennis", "Games/Tischtennis/Tischtennis_Vorschau.html"]
-        ];
-
-        const container = document.getElementById("button-container");
-        buttons.forEach(([text, link]) => {
-            container.innerHTML += `<button onclick="location.href='${link}'">${text}</button>`;
-        });
-        spezialButtons.forEach(([text, link] =>{
-         <button onclick="location.href='${link}'">${text}</button>   
+        const currentUser = getCurrentUser();
+        if (!currentUser) {
+            window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
         }
-        ))
+        
+        // Statistiken laden und anzeigen
+        async function loadStatistics() {
+            const stats = await meineStatistiken();
+            if (stats) {
+                document.getElementById('nutzername').innerText = stats.username || "---";
+                document.getElementById('trophies').innerText = stats.gesamtTrophies || 0;
+                document.getElementById('gespielteSpiele').innerText = stats.spieleGesamt || 0;
+                
+                // Spielübersicht formatieren
+                const spiele = stats.spiele || {};
+                const spieleListe = Object.keys(spiele).map(name => `${name}: ${spiele[name]} Trophies`).join(', ');
+                document.getElementById('uebersicht').innerText = spieleListe || "Keine Spiele gespielt";
+                
+                if (stats.registriertAm) {
+                    const date = new Date(stats.registriertAm);
+                    document.getElementById('registriertAm').innerText = date.toLocaleDateString('de-DE');
+                }
+            }
+        }
+        
+        // Spiele-Buttons
+        const buttons = [
+            ["🏃 Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
+            ["🐍 Snake", "Games/Snake/snake_Vorschau.html"],
+            ["🐱 Super-Cat", "Games/Super-Cat/Super_Cat_Vorschau.html"],
+            ["❌ Tic-Tac-Toe", "Games/Tic-Tac-Toe/Tic_Tac_Toe_Vorschau.html"],
+            ["🏓 Table-Tennis", "Games/Tischtennis/Tischtennis_Vorschau.html"]
+        ];
+        
+        // Spezial-Buttons (z.B. Logout)
+        const spezialButtons = [
+            ["🚪 Log Out", "Benutzerkonten_und_Ranglisten/logout.html"]
+        ];
+        
+        // Buttons in Container einfügen
+        const gameContainer = document.getElementById("button-container");
+        buttons.forEach(([text, link]) => {
+            const btn = document.createElement("button");
+            btn.textContent = text;
+            btn.onclick = () => location.href = link;
+            gameContainer.appendChild(btn);
+        });
+        
+        const specialContainer = document.getElementById("special-button-container");
+        spezialButtons.forEach(([text, link]) => {
+            const btn = document.createElement("button");
+            btn.textContent = text;
+            btn.onclick = () => location.href = link;
+            specialContainer.appendChild(btn);
+        });
+        
+        // Service Worker registrieren
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/GameCombo/sw.js') 
                 .then(reg => console.log('Service Worker registered', reg))
-                .catch(err => console.error('Service Worker Fehler:', err));
+                .catch(err => console.error('Service Worker error:', err));
         }
+        
+        // Statistiken laden
+        loadStatistics();
     </script>
 </body>
 </html>
