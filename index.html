@@ -29,6 +29,9 @@ if (!currentUser) {
   // Nicht eingeloggt → zur Login-Seite
   window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
 }
+        const spezialButtons=[
+          ["Log Out", "Benutzerkonten_und_Ranglisten/logOut.html"]
+        ];
         const buttons = [
             ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
             ["Snake", "Games/Snake/snake_Vorschau.html"],
@@ -41,7 +44,10 @@ if (!currentUser) {
         buttons.forEach(([text, link]) => {
             container.innerHTML += `<button onclick="location.href='${link}'">${text}</button>`;
         });
-        
+        spezialButtons.forEach(([text, link] =>{
+         <button onclick="location.href='${link}'">${text}</button>   
+        }
+        ))
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/GameCombo/sw.js') 
                 .then(reg => console.log('Service Worker registered', reg))
