@@ -167,7 +167,7 @@
         <button onclick="handleGoogleRegister()" class="google-btn">Sign up with Google</button>
         
         <div class="link">
-            Already have an account? <a href="login.html">Sign in</a>
+            Already have an account? <a href="./login.html">Sign in</a>
         </div>
     </div>
 
@@ -214,7 +214,7 @@
             if (result.success) {
                 showSuccess("Registration successful! Please check your email for confirmation. Redirecting to login...");
                 setTimeout(() => {
-                    window.location.href = "login.html";
+                    window.location.href = "./login.html";
                 }, 3000);
             } else {
                 showError(result.error);
@@ -227,7 +227,7 @@
             if (result.success) {
                 showSuccess("Google sign up successful! Redirecting...");
                 setTimeout(() => {
-                    window.location.href = "index.html";
+                    window.location.href = "../index.html";
                 }, 1500);
             } else {
                 showError(result.error);
