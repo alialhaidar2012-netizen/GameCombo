@@ -168,8 +168,8 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
    let level = 1;
      const result = await spielBeenden("Super_Cat", level, true);
      localStorage.setItem("Trophies", result.erhalteneTrophies);
-     localStorage.setItem("Victory", "gewonnen");
-     window.location.replace("../Victory.html");
+     localStorage.setItem("Victory", "verloren");
+     window.location.replace("../Game_Over.html");
    return;
        }
      }
