@@ -2,18 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - GameCombo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Sign Out - GameCombo</title>
     <link rel="manifest" href="../manifest.json" />
     <style>
-        /* === YOUR GAME DESIGN GOES HERE === */
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
@@ -22,74 +20,75 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .container {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 40px;
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             text-align: center;
         }
-        
+
         h1 {
             margin-bottom: 10px;
             color: #333;
+            font-size: 28px;
         }
-        
+
         .sub {
             color: #666;
             margin-bottom: 30px;
-        }
-        
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
             font-size: 16px;
-            transition: 0.3s;
         }
-        
-        input:focus {
-            outline: none;
-            border-color: #2a5298;
+
+        .user-info {
+            background: #e8f0fe;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: left;
         }
-        
+
+        .user-info p {
+            margin: 5px 0;
+            color: #1e3c72;
+            font-weight: 500;
+        }
+
         button {
             width: 100%;
             padding: 12px;
-            background: #2a5298;
+            background: #dc3545;
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 18px;
             cursor: pointer;
             transition: 0.3s;
+            margin-bottom: 15px;
         }
-        
+
         button:hover {
-            background: #1e3c72;
+            background: #c82333;
         }
-        
-        .google-btn {
-            background: #db4437;
-            margin-top: 10px;
+
+        .cancel-btn {
+            background: #6c757d;
         }
-        
-        .google-btn:hover {
-            background: #c53727;
+
+        .cancel-btn:hover {
+            background: #5a6268;
         }
-        
+
         .divider {
             display: flex;
             align-items: center;
             margin: 20px 0;
             color: #666;
         }
-        
+
         .divider::before,
         .divider::after {
             content: "";
@@ -97,26 +96,16 @@
             height: 1px;
             background: #ddd;
         }
-        
+
         .divider::before {
             margin-right: 10px;
         }
-        
+
         .divider::after {
             margin-left: 10px;
         }
-        
-        .link {
-            margin-top: 20px;
-            color: #666;
-        }
-        
-        .link a {
-            color: #2a5298;
-            text-decoration: none;
-        }
-        
-        .error {
+
+        .message {
             background: #ffebee;
             color: #c62828;
             padding: 10px;
@@ -124,33 +113,113 @@
             margin-bottom: 15px;
             display: none;
         }
-        
-        .success {
+
+        .message.success {
             background: #e8f5e9;
             color: #2e7d32;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.6s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎮 GameCombo</h1>
-        <p class="sub">Sign out</p>
-      <div id="message"></div>
-      <button onclick="SO()">Sign out</button>
+        <p class="sub">Account Management</p>
+
+        <div id="userInfo" class="user-info">
+            <p>👤 <strong>Name:</strong> <span id="displayName">---</span></p>
+            <p>🏆 <strong>Trophies:</strong> <span id="displayTrophies">0</span></p>
+        </div>
+
+        <div id="messageBox" class="message"></div>
+
+        <button id="logoutBtn" onclick="performLogout()">Sign Out</button>
+        
+        <div class="divider">or</div>
+        
+        <button class="cancel-btn" onclick="goBack()">Back</button>
     </div>
+
     <script src="./Rangliste_und_Anmelden.js" type="module"></script>
-    <script>
-     function SO(){
-       let currentUser = false;
-       if(currentUser){
-         message.innerText = "Something went wrong please try again";
-       }
-       window.location.replace("./register.html");
-     }
+    <script type="module">
+        import { logoutUser, getCurrentUser, meineStatistiken } from './Rangliste_und_Anmelden.js';
+
+        // Load user information
+        async function loadUserInfo() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('displayName').innerText = user.username || user.email;
+                
+                const stats = await meineStatistiken();
+                if (stats && stats.gesamtTrophies !== undefined) {
+                    document.getElementById('displayTrophies').innerText = stats.gesamtTrophies;
+                }
+            } else {
+                document.getElementById('displayName').innerText = "Not logged in";
+            }
+        }
+
+        // Sign out
+        window.performLogout = async function() {
+            const btn = document.getElementById('logoutBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Signing out <span class="loading"></span>';
+            btn.disabled = true;
+
+            try {
+                const result = await logoutUser();
+                
+                if (result.success) {
+                    showMessage("✅ Successfully signed out! Redirecting...", "success");
+                    setTimeout(() => {
+                        window.location.replace("./login.html");
+                    }, 1500);
+                } else {
+                    showMessage("❌ Sign out failed: " + result.error);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                showMessage("❌ An error occurred: " + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        // Go back to home
+        window.goBack = function() {
+            window.location.href = "../index.html";
+        };
+
+        // Show message
+        function showMessage(msg, type = "error") {
+            const box = document.getElementById('messageBox');
+            box.textContent = msg;
+            box.className = "message " + type;
+            box.style.display = "block";
+            
+            setTimeout(() => {
+                box.style.display = "none";
+            }, 3000);
+        }
+
+        // Load page
+        loadUserInfo();
     </script>
 </body>
 </html>
