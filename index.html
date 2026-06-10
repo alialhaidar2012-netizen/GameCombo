@@ -7,10 +7,23 @@
     <link rel="manifest" href="manifest.json" />
     <script src="Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
     <link rel="stylesheet" href="Games/style.css">
+    <style>
+        /* Zusätzlicher Style für den Logout-Button */
+        .special-buttons {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+        .special-buttons button {
+            background: #dc3545;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
     
     <div id="wrapper">
+        <div class="special-buttons" id="special-button-container"></div>
         <div id="button-container"></div>
         <div class="widgets">
             <h3>Statistics:</h3>
@@ -24,14 +37,12 @@
 
     <script>
         // Prüfen, ob Benutzer eingeloggt ist
-const currentUser = localStorage.getItem("currentUser");
-if (!currentUser) {
-  // Nicht eingeloggt → zur Login-Seite
-  window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
-}
-        const spezialButtons=[
-          ["Log Out", "Benutzerkonten_und_Ranglisten/logOut.html"]
-        ];
+        const currentUser = localStorage.getItem("currentUser");
+        if (!currentUser) {
+            window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
+        }
+        
+        // Spiele-Buttons
         const buttons = [
             ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
             ["Snake", "Games/Snake/snake_Vorschau.html"],
@@ -39,15 +50,31 @@ if (!currentUser) {
             ["Tic-Tac-Toe", "Games/Tic-Tac-Toe/Tic_Tac_Toe_Vorschau.html"],
             ["Table-Tennis", "Games/Tischtennis/Tischtennis_Vorschau.html"]
         ];
-
+        
+        // Spezial-Buttons (Logout)
+        const spezialButtons = [
+            ["Log Out", "Benutzerkonten_und_Ranglisten/logOut.html"]
+        ];
+        
+        // Buttons in Container einfügen
         const container = document.getElementById("button-container");
         buttons.forEach(([text, link]) => {
-            container.innerHTML += `<button onclick="location.href='${link}'">${text}</button>`;
+            const btn = document.createElement("button");
+            btn.textContent = text;
+            btn.onclick = () => location.href = link;
+            container.appendChild(btn);
         });
-        spezialButtons.forEach(([text, link] =>{
-         <button onclick="location.href='${link}'">${text}</button>   
-        }
-        ))
+        
+        // Spezial Buttons in eigenen Container einfügen
+        const specialContainer = document.getElementById("special-button-container");
+        spezialButtons.forEach(([text, link]) => {
+            const btn = document.createElement("button");
+            btn.textContent = text;
+            btn.onclick = () => location.href = link;
+            specialContainer.appendChild(btn);
+        });
+        
+        // Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/GameCombo/sw.js') 
                 .then(reg => console.log('Service Worker registered', reg))
