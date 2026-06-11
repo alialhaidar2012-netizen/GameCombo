@@ -31,6 +31,11 @@
       margin-bottom: 40px;
       text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
       animation: pulse 1.5s ease-in-out infinite;
+      white-space: nowrap;      /* Verhindert Zeilenumbruch */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2vmin;
     }
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -59,10 +64,20 @@
     #Home:active {
       transform: scale(0.98);
     }
+
+    /* Für sehr kleine Bildschirme (z.B. 320px Breite) */
+    @media (max-width: 480px) {
+      #GameOver {
+        font-size: 12vmin;
+        gap: 1.5vmin;
+      }
+    }
   </style>
 </head>
 <body>
-  <div id="GameOver">VICTORY!</div>
+  <div id="GameOver">
+    🏆 VICTORY! 🏆
+  </div>
   <button id="Home" onclick="window.location.href='../../index.html'">Back to Menu</button>
 </body>
 </html>
