@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="Games/style.css">
 </head>
 <body>
-    
+  <div class="special-buttons">
+    <button class="logout-btn" onclick="location.href='Benutzerkonten_und_Ranglisten/logOut.html'">Log Out</button>
+</div>  
     <div id="wrapper">
-        <div class="special-buttons" id="special-button-container"></div>
         <div id="button-container"></div>
         <div class="widgets">
             <h3>Statistics:</h3>
@@ -38,12 +39,6 @@
             ["Tic-Tac-Toe", "Games/Tic-Tac-Toe/Tic_Tac_Toe_Vorschau.html"],
             ["Table-Tennis", "Games/Tischtennis/Tischtennis_Vorschau.html"]
         ];
-        
-        // Logout Button
-        const spezialButtons = [
-            ["Log Out", "Benutzerkonten_und_Ranglisten/logOut.html"]
-        ];
-        
         // Buttons in Container einfügen
         const container = document.getElementById("button-container");
         buttons.forEach(([text, link]) => {
@@ -51,15 +46,6 @@
             btn.textContent = text;
             btn.onclick = () => location.href = link;
             container.appendChild(btn);
-        });
-        
-        // Logout Button einfügen
-        const specialContainer = document.getElementById("special-button-container");
-        spezialButtons.forEach(([text, link]) => {
-            const btn = document.createElement("button");
-            btn.textContent = text;
-            btn.onclick = () => location.href = link;
-            specialContainer.appendChild(btn);
         });
         
         // Service Worker
