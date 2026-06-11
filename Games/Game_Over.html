@@ -16,27 +16,51 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      background: linear-gradient(135deg, #2c2c2c, #1a1a2e);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
     #GameOver {
       font-size: 15vmin;
       font-weight: 700;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #dc3545;
+      color: #6c757d;
       text-align: center;
       margin-bottom: 40px;
-      text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+      text-shadow: none;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2vmin;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(-200px);
+      animation: fall 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    }
+    @keyframes fall {
+      0% {
+        opacity: 0;
+        transform: translateY(-200px) rotate(-10deg);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(10px) rotate(2deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0);
+      }
     }
     #Home {
       width: 40vmin;
       max-width: 250px;
       height: 10vmin;
       max-height: 60px;
-      background-color: #6c757d;
+      background-color: #5a6268;
       border: none;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       font-size: 3vmin;
@@ -44,19 +68,158 @@
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s;
-      color: white;
+      color: #d4d4d4;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeIn 0.5s ease-out 0.5s forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
     #Home:hover {
-      background-color: #5a6268;
+      background-color: #4a5259;
       transform: scale(1.02);
     }
     #Home:active {
       transform: scale(0.98);
     }
+
+    @media (max-width: 480px) {
+      #GameOver {
+        font-size: 12vmin;
+        gap: 1.5vmin;
+      }
+    }
+
+    /* Totenkopf Canvas */
+    #skull-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
-  <div id="GameOver">💀 GAME OVER 💀</div>
+  <canvas id="skull-canvas"></canvas>
+  <div id="GameOver">
+    💀 GAME OVER 💀
+  </div>
   <button id="Home" onclick="window.location.href='../../index.html'">Back to Menu</button>
+
+  <script>
+    // Fallende Totenköpfe (unsanft)
+    const canvas = document.getElementById('skull-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    
+    canvas.width = width;
+    canvas.height = height;
+    
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    });
+    
+    class Skull {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * -height;
+        this.size = Math.random() * 30 + 20;
+        this.speedY = Math.random() * 6 + 4;  // Schneller Fall
+        this.speedX = (Math.random() - 0.5) * 1.5;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = (Math.random() - 0.5) * 8;
+        // Matte, düstere Farben
+        const darkColors = [
+          '#4a4a4a',
+          '#5a5a5a',
+          '#3a3a3a',
+          '#6a6a6a',
+          '#555555',
+          '#444444'
+        ];
+        this.color = darkColors[Math.floor(Math.random() * darkColors.length)];
+      }
+      
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.rotation += this.rotationSpeed;
+        
+        if (this.y > height + 50) {
+          this.y = -50;
+          this.x = Math.random() * width;
+        }
+        if (this.x > width + 50) this.x = -50;
+        if (this.x < -50) this.x = width + 50;
+      }
+      
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation * Math.PI / 180);
+        ctx.shadowBlur = 0; // Kein Glanz
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = '#2a2a2a';
+        ctx.lineWidth = 1.5;
+        
+        // Einfacher Totenkopf
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Augen
+        ctx.fillStyle = '#1a1a1a';
+        ctx.beginPath();
+        ctx.arc(-this.size/4, -this.size/6, this.size/6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.size/4, -this.size/6, this.size/6, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Nase
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-this.size/8, this.size/8);
+        ctx.lineTo(this.size/8, this.size/8);
+        ctx.fill();
+        
+        // Mund (Zähne)
+        ctx.fillStyle = '#2a2a2a';
+        for (let i = -3; i <= 3; i++) {
+          ctx.fillRect(i * this.size/6, this.size/5, this.size/12, this.size/8);
+        }
+        
+        ctx.restore();
+      }
+    }
+    
+    const skullCount = 60;
+    const skulls = [];
+    for (let i = 0; i < skullCount; i++) {
+      skulls.push(new Skull());
+    }
+    
+    function animateSkulls() {
+      ctx.clearRect(0, 0, width, height);
+      for (let s of skulls) {
+        s.update();
+        s.draw();
+      }
+      requestAnimationFrame(animateSkulls);
+    }
+    
+    animateSkulls();
+  </script>
 </body>
 </html>
