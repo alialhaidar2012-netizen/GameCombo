@@ -174,6 +174,13 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
     }else{
       console.warn("You arent logged in - no Trophies saved");
     }
+if(gewonnen){
+  localStorage.setItem("Victory","gewonnen");
+  window.location.replace("../Victory.html");
+} else {
+  localStorage.setItem("Victory","false");
+  window.location.replace("../GameOver.html");
+}
 };
 let welt = {
     höhe: 480,
