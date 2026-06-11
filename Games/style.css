@@ -10,6 +10,34 @@ html, body {
     overflow-y: auto;
     background-color: #00008B;
 }
+
+/* ===== LOGOUT BUTTON (ganz klein, immer links oben) ===== */
+.special-buttons {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: auto;
+    height: auto;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
 /* Wrapper */
 #wrapper {
     display: flex;
@@ -61,6 +89,7 @@ button:hover {
 .widgets div {
     margin-bottom: 6px;
 }
+
 /* Kleiner Bildschirm */
 @media (max-width: 750px) {
     #wrapper {
