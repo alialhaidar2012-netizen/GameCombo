@@ -157,22 +157,23 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
     stopp: async function(grund){
        this.beendet = true;
        window.clearTimeout(this.timer);
-       if(grund=="gewonnen"){
-   let level = 1;
-     const result = await spielBeenden("Super_Cat", level, true);
-     localStorage.setItem("Trophies", result.erhalteneTrophies);
-     localStorage.setItem("Victory", "gewonnen");
-     window.location.replace("../Victory.html");
-   return;
-       }else{
-   let level = 1;
-     const result = await spielBeenden("Super_Cat", level, true);
-     localStorage.setItem("Trophies", result.erhalteneTrophies);
-     localStorage.setItem("Victory", "verloren");
-     window.location.replace("../Game_Over.html");
-   return;
-       }
-     }
+    let level = 0;
+    let gewonnen = (grund === "gewonnen");
+    const currentUser = getCurrentUser();
+    if(currentUser){
+      try{
+        const result = await spielBeenden("Super_Cat", level, gewonnen);
+        if(result && result.success){
+          console.log("Trophies saved");
+        }else{
+          console.warn("Trophies can't be saved");
+        }
+      }catch(error){
+        console.error("Saving error:", error);
+      }
+    }else{
+      console.warn("You arent logged in - no Trophies saved");
+    }
 };
 let welt = {
     höhe: 480,
