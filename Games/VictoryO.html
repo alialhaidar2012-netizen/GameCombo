@@ -1,1 +1,111 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Victory! - GameCombo</title>
+  <link rel="manifest" href="../manifest.json" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;
+    }
+    #VictoryText {
+      font-size: 15vmin; font-weight: 700; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: gold; text-align: center; margin-bottom: 20px;
+      text-shadow: 0 0 10px #ff0, 0 0 20px #ff0;
+      white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 2vmin; z-index: 10;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); text-shadow: 0 0 10px #ff0; }
+      50% { transform: scale(1.05); text-shadow: 0 0 30px #ffaa00; }
+      100% { transform: scale(1); text-shadow: 0 0 10px #ff0; }
+    }
+    .trophy-counter {
+      background: rgba(0,0,0,0.5); border-radius: 50px; padding: 12px 24px; margin-bottom: 30px;
+      display: flex; align-items: center; gap: 12px; font-family: 'Segoe UI', sans-serif;
+      font-size: 4vmin; font-weight: bold; color: #ffd700; backdrop-filter: blur(5px); z-index: 10;
+      border: 1px solid rgba(255,215,0,0.5); animation: fadeInUp 0.5s ease-out 0.3s forwards;
+    }
+    .trophy-counter span:first-child { font-size: 5vmin; }
+    .trophy-value {
+      background: #000; padding: 4px 12px; border-radius: 30px; color: #ffd700;
+      font-family: monospace; font-size: 4.5vmin; min-width: 80px; text-align: center;
+    }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    #Home {
+      width: 40vmin; max-width: 250px; height: 10vmin; max-height: 60px; background-color: gold;
+      border: none; font-family: 'Segoe UI', sans-serif; font-size: 3vmin; font-weight: bold;
+      border-radius: 10px; cursor: pointer; transition: all 0.3s; color: #1e3c72; z-index: 10;
+      box-shadow: 0 0 15px rgba(255,215,0,0.5); opacity: 0; animation: fadeIn 0.5s ease-out 0.5s forwards;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    #Home:hover { background-color: #ffcc00; transform: scale(1.02); }
+    @media (max-width: 480px) {
+      #VictoryText { font-size: 12vmin; gap: 1.5vmin; }
+      .trophy-counter { padding: 8px 16px; font-size: 3.5vmin; }
+      .trophy-value { font-size: 4vmin; min-width: 60px; }
+    }
+    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+  <div id="VictoryText">🏆 PLAYER O 🏆</div>
+  <div class="trophy-counter">
+    <span>🏆</span>
+    <span>Trophies gained:</span>
+    <span class="trophy-value" id="trophyValue">0</span>
+  </div>
+  <button id="Home" onclick="window.location.href='../../index.html'">Back to Menu</button>
+
+  <script>
+    function showTrophies() {
+      let trophies = sessionStorage.getItem("Trophies");
+      if (!trophies) trophies = localStorage.getItem("Trophies");
+      document.getElementById('trophyValue').innerText = (trophies && !isNaN(trophies)) ? trophies : "0";
+    }
+    showTrophies();
+
+    // Neon-Konfetti
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth, height = window.innerHeight;
+    canvas.width = width; canvas.height = height;
+    window.addEventListener('resize', () => {
+      width = window.innerWidth; height = window.innerHeight;
+      canvas.width = width; canvas.height = height;
+    });
+    class Confetti {
+      constructor() {
+        this.x = Math.random() * width; this.y = Math.random() * -height; this.size = Math.random() * 8 + 4;
+        this.speedY = Math.random() * 5 + 3; this.speedX = (Math.random() - 0.5) * 2;
+        this.rotation = Math.random() * 360; this.rotationSpeed = (Math.random() - 0.5) * 10;
+        const neonColors = ['#ff00ff', '#00ffff', '#ff0000', '#00ff00', '#ffff00', '#ff8800', '#ff00cc', '#44ff44'];
+        this.color = neonColors[Math.floor(Math.random() * neonColors.length)];
+      }
+      update() {
+        this.y += this.speedY; this.x += this.speedX; this.rotation += this.rotationSpeed;
+        if (this.y > height) { this.y = -20; this.x = Math.random() * width; }
+        if (this.x > width) this.x = 0; if (this.x < 0) this.x = width;
+      }
+      draw() {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation * Math.PI / 180);
+        ctx.shadowBlur = 15; ctx.shadowColor = this.color; ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size); ctx.restore();
+      }
+    }
+    const confettis = Array.from({ length: 150 }, () => new Confetti());
+    function animateConfetti() {
+      ctx.clearRect(0, 0, width, height);
+      confettis.forEach(c => { c.update(); c.draw(); });
+      requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
+  </script>
+</body>
+</html>
