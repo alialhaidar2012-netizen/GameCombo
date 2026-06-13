@@ -109,8 +109,8 @@
   <div id="GameOver">
     💀 GAME OVER 💀
   </div>
+  <div id="TrophieCounter"></div>
   <button id="Home" onclick="window.location.href='../../index.html'">Back to Menu</button>
-
   <script>
     // Fallende Totenköpfe (unsanft)
     const canvas = document.getElementById('skull-canvas');
@@ -218,8 +218,11 @@
       }
       requestAnimationFrame(animateSkulls);
     }
-    
     animateSkulls();
+    function showTrophies(){
+    sessionStorage.getItem()
+    TrophieCounter.value=
+    }
   </script>
 </body>
 </html>
