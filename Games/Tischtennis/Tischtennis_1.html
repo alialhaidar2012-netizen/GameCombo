@@ -151,14 +151,14 @@ yUmkehren: function() {
   reset: async function() {
     if(this.x == 0 || this.x < 0){
         let level = 1;
-        let gewonnen = true;
+        let gewonnen = false;
         const result = await spielBeenden("Tischtennis", level, false);
         localStorage.setItem("Trophies", result.erhalteneTrophies);
         localStorage.setItem("Victory", "false");
         window.location.replace("../Game_Over.html");
     }else{
     let level = 1;
-    let gewonnen = false;
+    let gewonnen = true;
     const result = await spielBeenden("Tischtennis", level, true);
       localStorage.setItem("Trophies", result.erhalteneTrophies);
       localStorage.setItem("Victory", "true");
