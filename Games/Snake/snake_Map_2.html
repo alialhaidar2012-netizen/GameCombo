@@ -109,7 +109,6 @@ tick: async function() {
       localStorage.setItem("Victory", "true");
       window.location.replace("../Victory.html");
     } else {
-      let level = 2;
       let gewonnen = false;
       const result = await spielBeenden("snake", level, false);
       localStorage.setItem("Score", spiel.punkte);
