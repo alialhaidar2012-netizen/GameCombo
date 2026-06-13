@@ -99,12 +99,14 @@
             if (ergebnis == "Ende") {
                 let level = 1;
                 if (spiel.punkte >= 10) {
+                    let gewonnen = true;
                     const result = await spielBeenden("snake", level, true);
                     localStorage.setItem("Score", spiel.punkte);
                     localStorage.setItem("Trophies", result.erhalteneTrophies);
                     localStorage.setItem("Victory", "true");
                     window.location.replace("../Victory.html");
                 } else {
+                    let gewonnen = false;
                     const result = await spielBeenden("snake", level, false);
                     localStorage.setItem("Score", spiel.punkte);
                     localStorage.setItem("Trophies", result.erhalteneTrophies);
