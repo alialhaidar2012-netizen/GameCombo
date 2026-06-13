@@ -107,6 +107,7 @@
             zuege++
             if (pruefeGewinner("O")) {
                 let level = 1;
+                let gewonnen = false;
                 const result = await spielBeenden("TTT_Ki", level, false);
                 localStorage.setItem("Trophies", result.erhalteneTrophies);
                 localStorage.setItem("Victory", "false");
@@ -114,6 +115,7 @@
                 return;
             }else if(zuege >= 9){
                 let level = 1;
+                let gewonnen = false;
                 const result = await spielBeenden("TTT_Ki", level, false);
                 localStorage.setItem("Trophies", result.erhalteneTrophies);
                 localStorage.setItem("Victory", "false");
@@ -133,6 +135,7 @@
                 zuege++
                 if (pruefeGewinner("X")) {
                     let level = 1;
+                    let gewonnen = true;
                     const result = await spielBeenden("TTT_Ki", level, true);
                     localStorage.setItem("Trophies", result.erhalteneTrophies);
                     localStorage.setItem("Victory", "true");
@@ -140,6 +143,7 @@
                     return;
                 }else if (zuege >= 9) {
                 let level = 1;
+                let gewonnen = false;
                 const result = await spielBeenden("TTT_Ki", level, false);
                 localStorage.setItem("Trophies", result.erhalteneTrophies);
                 localStorage.setItem("Victory", "false");
