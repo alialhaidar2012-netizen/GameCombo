@@ -270,7 +270,7 @@ function getTrophiesforLevel(spielName, level) {
     "TTT_Ki": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
     "TTT_2P": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
     "Tischtennis": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
-    "E_R": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } }
+    "E-R": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } }
   };
   
   if (levelData[spielName] && levelData[spielName][level]) {
