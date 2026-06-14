@@ -143,10 +143,16 @@
   <button id="Home" onclick="window.location.href='../../index.html'">Back to Menu</button>
 
   <script>
+    // Trophäen anzeigen - KORRIGIERT
     function showTrophies() {
       let trophies = localStorage.getItem("Trophies");
-      document.getElementById("trophy-value").innerText= trophies;
-      showTrophies();
+      if (trophies && !isNaN(trophies)) {
+        document.getElementById('trophyValue').innerText = trophies;
+      } else {
+        document.getElementById('trophyValue').innerText = "0";
+      }
+    }
+    showTrophies();
 
     // Fallende Totenköpfe
     const canvas = document.getElementById('skull-canvas');
@@ -155,6 +161,7 @@
     let height = window.innerHeight;
     canvas.width = width;
     canvas.height = height;
+    
     window.addEventListener('resize', () => {
       width = window.innerWidth;
       height = window.innerHeight;
@@ -178,7 +185,10 @@
         this.y += this.speedY;
         this.x += this.speedX;
         this.rotation += this.rotationSpeed;
-        if (this.y > height + 50) { this.y = -50; this.x = Math.random() * width; }
+        if (this.y > height + 50) { 
+          this.y = -50; 
+          this.x = Math.random() * width; 
+        }
         if (this.x > width + 50) this.x = -50;
         if (this.x < -50) this.x = width + 50;
       }
@@ -213,12 +223,19 @@
         ctx.restore();
       }
     }
+    
     const skullCount = 60;
     const skulls = [];
-    for (let i = 0; i < skullCount; i++) skulls.push(new Skull());
+    for (let i = 0; i < skullCount; i++) {
+      skulls.push(new Skull());
+    }
+    
     function animateSkulls() {
       ctx.clearRect(0, 0, width, height);
-      for (let s of skulls) { s.update(); s.draw(); }
+      for (let s of skulls) { 
+        s.update(); 
+        s.draw(); 
+      }
       requestAnimationFrame(animateSkulls);
     }
     animateSkulls();
