@@ -143,12 +143,8 @@
   <button id="Home" onclick="window.location.href='../../index.html'">Back to Menu</button>
 
   <script>
-    // Trophäen aus sessionStorage oder localStorage anzeigen
     function showTrophies() {
-      let trophies = sessionStorage.getItem("Trophies");
-      if (!trophies) {
-        trophies = localStorage.getItem("Trophies");
-      }
+      let trophies = localStorage.getItem("Trophies");
       if (trophies && !isNaN(trophies)) {
         document.getElementById('trophyValue').innerText = trophies;
       } else {
