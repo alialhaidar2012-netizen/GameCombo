@@ -70,7 +70,7 @@
   <script>
     function showTrophies() {
       let trophies = localStorage.getItem("Trophies");
-      document.getElementById('trophyValue').innerText = (trophies && !isNaN(trophies))
+      document.getElementById('trophyValue').innerText = trophies
     }
     showTrophies();
 
