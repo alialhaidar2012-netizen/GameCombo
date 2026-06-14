@@ -145,7 +145,7 @@
   <script>
     function showTrophies() {
       let trophies = localStorage.getItem("Trophies");
-      document.getElementById("trophy-value")
+      document.getElementById("trophy-value").innerText= trophies;
       showTrophies();
 
     // Fallende Totenköpfe
