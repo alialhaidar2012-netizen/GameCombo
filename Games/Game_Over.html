@@ -145,13 +145,8 @@
   <script>
     function showTrophies() {
       let trophies = localStorage.getItem("Trophies");
-      if (trophies && !isNaN(trophies)) {
-        document.getElementById('trophyValue').innerText = trophies;
-      } else {
-        document.getElementById('trophyValue').innerText = "0";
-      }
-    }
-    showTrophies();
+      document.getElementById("trophy-value")
+      showTrophies();
 
     // Fallende Totenköpfe
     const canvas = document.getElementById('skull-canvas');
