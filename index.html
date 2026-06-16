@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>GameCombo</title>
     <link rel="manifest" href="manifest.json" />
-    <script src="Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
+    <script type=module src="Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
     <link rel="stylesheet" href="Games/style.css">
 </head>
 <body>
@@ -18,6 +18,7 @@
             <h3>Statistics:</h3>
             <div>Name: <span id="nutzername"></span></div>
             <div>Trophies: <span id="trophies"></span></div>
+            <div>Rankplacement in the World<span id="YourRank"></span></div>
             <div>Played Games: <span id="gespielteSpiele"></span></div>
             <div>Game Overview: <span id="uebersicht"></span></div>
             <div>Registered at: <span id="registriertAm"></span></div>
@@ -29,8 +30,16 @@
         const currentUser = localStorage.getItem("currentUser");
         if (!currentUser) {
             window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
+        }else{
+         document.querySelector("span");
+            
+         nutzername.innerText= username;
+         trophies.innerText = gesamtTrophies;
+         YourRank.innerText = rank;
+         gespielteSpiele.innerText = spieleGesamt;
+         uebersicht.innerText = spiele;
+         registriertAm.innerText = registertAm; 
         }
-        
         // Spiele-Buttons
         const buttons = [
             ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
