@@ -5,42 +5,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>GameCombo</title>
     <link rel="manifest" href="manifest.json" />
-    <script type=module src="Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
     <link rel="stylesheet" href="Games/style.css">
+    <style>
+        .special-buttons {
+            position: fixed;
+            top: 8px;
+            left: 8px;
+            z-index: 1000;
+        }
+        .special-buttons button {
+            background-color: #888;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            width: auto;
+            height: auto;
+            min-width: 0;
+        }
+        .special-buttons button:hover {
+            opacity: 1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: #00008B;
+        }
+        #wrapper {
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+            position: relative;
+            min-height: 100vh;
+        }
+        #button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        button {
+            width: 250px;
+            height: 60px;
+            font-family: sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            background-color: darkgreen;
+            color: yellow;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: orange;
+        }
+        .widgets {
+            position: absolute;
+            top: 50px;
+            right: 25px;
+            width: 280px;
+            background-color: green;
+            color: yellow;
+            font-size: 16px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .widgets h3 {
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+        .widgets div {
+            margin-bottom: 6px;
+        }
+        @media (max-width: 750px) {
+            #wrapper {
+                flex-direction: column;
+                align-items: center;
+                padding-top: 20px;
+            }
+            .widgets {
+                position: relative;
+                top: auto;
+                right: auto;
+                width: 90%;
+                margin: 0 auto 30px auto;
+                order: 1;
+            }
+            #button-container {
+                order: 2;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="special-buttons">
-    <button class="logout-btn" onclick="window.location.href='Benutzerkonten_und_Ranglisten/logOut.html'">Log Out</button>
-</div>  
+    <div class="special-buttons">
+        <button class="logout-btn" onclick="window.location.href='Benutzerkonten_und_Ranglisten/logOut.html'">Log Out</button>
+    </div>
+
     <div id="wrapper">
         <div id="button-container"></div>
         <div class="widgets">
             <h3>Statistics:</h3>
             <div>Name: <span id="nutzername"></span></div>
             <div>Trophies: <span id="trophies"></span></div>
-            <div>Rankplacement in the World<span id="YourRank"></span></div>
+            <div>Rankplacement in the World: <span id="YourRank"></span></div>
             <div>Played Games: <span id="gespielteSpiele"></span></div>
             <div>Game Overview: <span id="uebersicht"></span></div>
             <div>Registered at: <span id="registriertAm"></span></div>
         </div>
     </div>
 
-    <script>
-        // Prüfen, ob Benutzer eingeloggt ist
-        const currentUser = localStorage.getItem("currentUser");
+    <script type="module">
+        import { meineStatistiken, getCurrentUser, getTrophiesRangliste } from './Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+
+        const currentUser = getCurrentUser();
         if (!currentUser) {
             window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
-        }else{
-         document.querySelector("span");
-            
-         nutzername.innerText= username;
-         trophies.innerText = gesamtTrophies;
-         YourRank.innerText = rank;
-         gespielteSpiele.innerText = spieleGesamt;
-         uebersicht.innerText = spiele;
-         registriertAm.innerText = registertAm; 
         }
-        // Spiele-Buttons
+
+        async function loadStatistics() {
+            try {
+                const stats = await meineStatistiken();
+                if (stats) {
+                    document.getElementById('nutzername').innerText = stats.username || "---";
+                    document.getElementById('trophies').innerText = stats.gesamtTrophies || 0;
+                    document.getElementById('gespielteSpiele').innerText = stats.spieleGesamt || 0;
+                    
+                    const spiele = stats.spiele || {};
+                    const spieleListe = Object.keys(spiele).map(name => `${name}: ${spiele[name]} Trophies`).join(', ');
+                    document.getElementById('uebersicht').innerText = spieleListe || "No games played";
+                    
+                    if (stats.registriertAm) {
+                        const date = new Date(stats.registriertAm);
+                        document.getElementById('registriertAm').innerText = date.toLocaleDateString('en-US');
+                    }
+                }
+            } catch (error) {
+                console.error("Fehler beim Laden der Statistiken:", error);
+            }
+        }
+
+        async function loadRank() {
+            try {
+                const currentUserData = getCurrentUser();
+                if (!currentUserData) return;
+                
+                const rangliste = await getTrophiesRangliste();
+                if (rangliste && rangliste.length > 0) {
+                    const userRank = rangliste.findIndex(user => user.username === currentUserData.username);
+                    if (userRank !== -1) {
+                        document.getElementById('YourRank').innerText = `#${userRank + 1}`;
+                    } else {
+                        document.getElementById('YourRank').innerText = "Unranked";
+                    }
+                } else {
+                    document.getElementById('YourRank').innerText = "No players yet";
+                }
+            } catch (error) {
+                console.error("Fehler beim Laden des Rangs:", error);
+                document.getElementById('YourRank').innerText = "Error loading rank";
+            }
+        }
+
         const buttons = [
             ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
             ["Snake", "Games/Snake/Snake_Vorschau.html"],
@@ -48,7 +185,7 @@
             ["Tic-Tac-Toe", "Games/Tic-Tac-Toe/Tic_Tac_Toe_Vorschau.html"],
             ["Table-Tennis", "Games/Tischtennis/Tischtennis_Vorschau.html"]
         ];
-        // Buttons in Container einfügen
+
         const container = document.getElementById("button-container");
         buttons.forEach(([text, link]) => {
             const btn = document.createElement("button");
@@ -56,13 +193,15 @@
             btn.onclick = () => location.href = link;
             container.appendChild(btn);
         });
-        
-        // Service Worker
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/GameCombo/sw.js') 
                 .then(reg => console.log('Service Worker registered', reg))
                 .catch(err => console.error('Service Worker Fehler:', err));
         }
+
+        loadStatistics();
+        loadRank();
     </script>
 </body>
 </html>
