@@ -27,6 +27,14 @@
     </div>
 
     <script type="module">
+const spielNamen = {
+    "snake": "Snake",
+    "Super_Cat": "Super Cat",
+    "TTT_Ki": "Tic-Tac-Toe (vs KI)",
+    "TTT_2P": "Tic-Tac-Toe (2 Player)",
+    "Tischtennis": "Table Tennis",
+    "E_R": "Endless Runner"
+};
         import { meineStatistiken, getCurrentUser, getTrophiesRangliste } from 'Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
 
         // Prüfen, ob Benutzer eingeloggt ist
@@ -46,8 +54,11 @@
                     
                     // Spielübersicht formatieren
                     const spiele = stats.spiele || {};
-                    const spieleListe = Object.keys(spiele).map(name => `${name}: ${spiele[name]} Trophies`).join(', ');
-                    document.getElementById('uebersicht').innerText = spieleListe || "No games played";
+                    const spieleListe = Object.keys(spiele).map(name =>{
+                        const vollName = spielName[name] || name;
+                        return ˋ${vollName}: ${spiele[name]} Trophiesˋ;
+                    })
+                    .join(', ');
                     
                     if (stats.registriertAm) {
                         const date = new Date(stats.registriertAm);
