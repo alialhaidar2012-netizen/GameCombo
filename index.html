@@ -6,109 +6,9 @@
     <title>GameCombo</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="Games/style.css">
-    <style>
-        .special-buttons {
-            position: fixed;
-            top: 8px;
-            left: 8px;
-            z-index: 1000;
-        }
-        .special-buttons button {
-            background-color: #888;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 11px;
-            cursor: pointer;
-            opacity: 0.6;
-            transition: opacity 0.2s;
-            width: auto;
-            height: auto;
-            min-width: 0;
-        }
-        .special-buttons button:hover {
-            opacity: 1;
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            overflow-y: auto;
-            background-color: #00008B;
-        }
-        #wrapper {
-            display: flex;
-            justify-content: center;
-            padding-top: 50px;
-            position: relative;
-            min-height: 100vh;
-        }
-        #button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        button {
-            width: 250px;
-            height: 60px;
-            font-family: sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            background-color: darkgreen;
-            color: yellow;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: orange;
-        }
-        .widgets {
-            position: absolute;
-            top: 50px;
-            right: 25px;
-            width: 280px;
-            background-color: green;
-            color: yellow;
-            font-size: 16px;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .widgets h3 {
-            margin-bottom: 12px;
-            font-size: 20px;
-        }
-        .widgets div {
-            margin-bottom: 6px;
-        }
-        @media (max-width: 750px) {
-            #wrapper {
-                flex-direction: column;
-                align-items: center;
-                padding-top: 20px;
-            }
-            .widgets {
-                position: relative;
-                top: auto;
-                right: auto;
-                width: 90%;
-                margin: 0 auto 30px auto;
-                order: 1;
-            }
-            #button-container {
-                order: 2;
-            }
-        }
-    </style>
 </head>
 <body>
+    <!-- Logout Button -->
     <div class="special-buttons">
         <button class="logout-btn" onclick="window.location.href='Benutzerkonten_und_Ranglisten/logOut.html'">Log Out</button>
     </div>
@@ -127,13 +27,15 @@
     </div>
 
     <script type="module">
-        import { meineStatistiken, getCurrentUser, getTrophiesRangliste } from './Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+        import { meineStatistiken, getCurrentUser, getTrophiesRangliste } from 'Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
 
+        // Prüfen, ob Benutzer eingeloggt ist
         const currentUser = getCurrentUser();
         if (!currentUser) {
             window.location.href = "Benutzerkonten_und_Ranglisten/login.html";
         }
 
+        // Statistiken laden und anzeigen
         async function loadStatistics() {
             try {
                 const stats = await meineStatistiken();
@@ -142,6 +44,7 @@
                     document.getElementById('trophies').innerText = stats.gesamtTrophies || 0;
                     document.getElementById('gespielteSpiele').innerText = stats.spieleGesamt || 0;
                     
+                    // Spielübersicht formatieren
                     const spiele = stats.spiele || {};
                     const spieleListe = Object.keys(spiele).map(name => `${name}: ${spiele[name]} Trophies`).join(', ');
                     document.getElementById('uebersicht').innerText = spieleListe || "No games played";
@@ -156,6 +59,7 @@
             }
         }
 
+        // Ranglistenplatz laden
         async function loadRank() {
             try {
                 const currentUserData = getCurrentUser();
@@ -178,6 +82,7 @@
             }
         }
 
+        // Spiele-Buttons
         const buttons = [
             ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
             ["Snake", "Games/Snake/Snake_Vorschau.html"],
@@ -186,6 +91,7 @@
             ["Table-Tennis", "Games/Tischtennis/Tischtennis_Vorschau.html"]
         ];
 
+        // Buttons in Container einfügen
         const container = document.getElementById("button-container");
         buttons.forEach(([text, link]) => {
             const btn = document.createElement("button");
@@ -194,12 +100,14 @@
             container.appendChild(btn);
         });
 
+        // Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/GameCombo/sw.js') 
                 .then(reg => console.log('Service Worker registered', reg))
                 .catch(err => console.error('Service Worker Fehler:', err));
         }
 
+        // Statistiken und Rang laden
         loadStatistics();
         loadRank();
     </script>
