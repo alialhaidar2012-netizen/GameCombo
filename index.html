@@ -27,6 +27,7 @@
     </div>
 
     <script type="module">
+     import { meineStatistiken, getCurrentUser, getTrophiesRangliste } from 'Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
         alert("JS starts");
         // ===== SPIELNAMEN-ÜBERSETZUNG =====
         const spielNamen = {
@@ -37,9 +38,6 @@
             "Tischtennis": "Table Tennis",
             "E_R": "Endless Runner"
         };
-
-        import { meineStatistiken, getCurrentUser, getTrophiesRangliste } from 'Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
-
         // Prüfen, ob Benutzer eingeloggt ist
         const currentUser = getCurrentUser();
         if (!currentUser) {
