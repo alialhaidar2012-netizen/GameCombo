@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="Games/style.css">
 </head>
 <body>
-    <!-- Logout Button -->
     <div class="special-buttons">
         <button class="logout-btn" onclick="window.location.href='./Benutzerkonten_und_Ranglisten/logOut.html'">Log Out</button>
     </div>
@@ -29,7 +28,6 @@
     <script type="module">
      import { meineStatistiken, getCurrentUser, getTrophiesRangliste } from './Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
         alert("JS starts");
-        // ===== SPIELNAMEN-ÜBERSETZUNG =====
         const spielNamen = {
             "snake": "Snake",
             "Super_Cat": "Super Cat",
@@ -38,13 +36,11 @@
             "Tischtennis": "Table Tennis",
             "E_R": "Endless Runner"
         };
-        // Prüfen, ob Benutzer eingeloggt ist
         const currentUser = getCurrentUser();
         if (!currentUser) {
             window.location.href = "./Benutzerkonten_und_Ranglisten/login.html";
         }
 
-        // Statistiken laden und anzeigen
         async function loadStatistics() {
             try {
                 const stats = await meineStatistiken();
@@ -96,7 +92,6 @@
             }
         }
 
-        // Spiele-Buttons
         const buttons = [
             ["Endless-Runner", "Games/Endless-Runner/Endless_Runner_Vorschau.html"],
             ["Snake", "Games/Snake/Snake_Vorschau.html"],
@@ -105,7 +100,6 @@
             ["Table-Tennis", "Games/Tischtennis/Tischtennis_Vorschau.html"]
         ];
 
-        // Buttons in Container einfügen
         const container = document.getElementById("button-container");
         buttons.forEach(([text, link]) => {
             const btn = document.createElement("button");
@@ -114,7 +108,6 @@
             container.appendChild(btn);
         });
 
-        // Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/GameCombo/sw.js') 
                 .then(reg => console.log('Service Worker registered', reg))
