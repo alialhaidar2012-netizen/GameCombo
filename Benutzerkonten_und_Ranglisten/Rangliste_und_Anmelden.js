@@ -292,7 +292,7 @@ async function spielBeenden(spielName, level, gewonnen) {
   return { success: true };
 }
 export{
-loginWihtGoogle,
+loginWithGoogle,
 registerUser,
 loginUser,
 logoutUser,
