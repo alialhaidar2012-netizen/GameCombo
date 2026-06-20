@@ -291,14 +291,15 @@ async function spielBeenden(spielName, level, gewonnen) {
   await addTrophies(spielName, trophies);
   return { success: true };
 }
-
-window.loginWithGoogle = loginWithGoogle;
-window.registerUser = registerUser;
-window.loginUser = loginUser;
-window.logoutUser = logoutUser;
-window.getCurrentUser = getCurrentUser;
-window.addTrophies = addTrophies;
-window.getTrophiesRangliste = getTrophiesRangliste;
-window.meineStatistiken = meineStatistiken;
-window.getTrophiesforLevel = getTrophiesforLevel;
-window.spielBeenden = spielBeenden;
+export{
+loginWihtGoogle,
+registerUser,
+loginUser,
+logoutUser,
+getCurrentUser,
+addTrophies,
+getTrophiesRangliste,
+meineStatistiken,
+getTrophiesforLevel,
+spielBeenden
+};
