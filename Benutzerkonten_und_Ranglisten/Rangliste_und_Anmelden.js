@@ -303,3 +303,5 @@ meineStatistiken,
 getTrophiesforLevel,
 spielBeenden
 };
+window.handleLogin = handleLogin;
+window.handleGoogleLogin = handleGoogleLogin;
