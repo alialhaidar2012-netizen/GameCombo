@@ -25,15 +25,13 @@
      <body>
 <canvas id="canvas" width="640" height="480"></canvas>
      <script>
+   import {
+      spielBeenden 
+   } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+        
      if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedRunner") !== "true") {
     window.location.replace("Endless_Runner_Tutorial.html");
     }
-    import {
-        getTrophiesforLevel,
-        addTrophies,
-       spielBeenden
-    } from './Rangliste_und_Anmelden.js';
-        
 var canvas= document.getElementById("canvas");
 var ctx= canvas.getContext("2d");
 
