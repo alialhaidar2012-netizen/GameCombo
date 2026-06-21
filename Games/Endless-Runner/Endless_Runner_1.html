@@ -1,7 +1,7 @@
 <!DOCTYPE html>
    <html>
      <head>
-      <title>Endless Runner 2</title>
+      <title>Endless Runner 1</title>
       <link rel="manifest" href="../../manifest.json" />
        <style>
       *{
@@ -24,11 +24,16 @@
      </head>
      <body>
 <canvas id="canvas" width="640" height="480"></canvas>
-<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
      <script>
      if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedRunner") !== "true") {
     window.location.replace("Endless_Runner_Tutorial.html");
     }
+    import {
+        getTrophiesforLevel,
+        addTrophies,
+       spielBeenden
+    } from './Rangliste_und_Anmelden.js';
+        
 var canvas= document.getElementById("canvas");
 var ctx= canvas.getContext("2d");
 
