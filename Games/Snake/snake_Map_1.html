@@ -43,9 +43,11 @@
 <button id="Unten" class="buttons">S</button>
 <button id="Links" class="buttons">A</button>
 <button id="Rechts" class="buttons">D</button>
-
-<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
 <script>
+import{
+   spielBeenden
+} from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+    
     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedSnake") !== "true") {
         window.location.replace("Snake_Tutorial.html");
     }
