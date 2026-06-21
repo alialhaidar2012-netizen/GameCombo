@@ -23,8 +23,11 @@
     </head>
     <body>
 <canvas id="canvas" width="640" height="480"></canvas>
-<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
     <script>
+import{
+     spielBeenden
+   } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+
         if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTischtennis") !== "true") {
         window.location.replace("Tischtennis_Tutorial.html");
     }
