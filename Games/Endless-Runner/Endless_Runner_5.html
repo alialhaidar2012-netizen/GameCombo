@@ -24,8 +24,11 @@
      </head>
      <body>
 <canvas id="canvas" width="640" height="480"></canvas>
-<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
      <script>
+import{
+   spielBeenden
+} from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+        
      if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedRunner") !== "true") {
       window.location.replace("Endless_Runner_Tutorial.html");
     }
