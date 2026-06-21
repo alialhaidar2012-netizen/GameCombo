@@ -170,9 +170,12 @@
             Already have an account? <a href="./login.html">Sign in</a>
         </div>
     </div>
-
-    <script src="./Rangliste_und_Anmelden.js" type="module"></script>
     <script>
+    import {
+        registerUser,
+        loginWithGoogle
+    } from './Rangliste_und_Anmelden.js';
+        
         async function handleRegister() {
             const email = document.getElementById('email').value;
             const username = document.getElementById('username').value;
