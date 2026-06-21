@@ -86,9 +86,12 @@ html, body {
      <div id="2_2" onclick="setze(this)"></div>
    </div>
  </div>
- 
-<script type="module" src="../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js"></script>
 <script>
+   import{
+     spielBeenden
+   } 
+     from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+   
     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTTT") !== "true") {
       window.location.replace("Tic-Tac-Toe_Tutorial.html");
     }
