@@ -303,5 +303,14 @@ meineStatistiken,
 getTrophiesforLevel,
 spielBeenden
 };
-window.handleLogin = handleLogin;
-window.handleGoogleLogin = handleGoogleLogin;
+window.loginWithGoogle = loginWithGoogle;
+window.spielBeenden = spielBeenden;
+window.getTrophiesforLevel = getTrophiesforLevel;
+window.registerUser = registerUser;
+window.loginUser = loginUser;
+window.logoutUser = logoutUser;
+window.getCurrentUser = getCurrentUser;
+window.addTrophies = addTrophies;
+window.getTrophiesRangliste = getTrophiesRangliste;
+window.meineStatistiken = meineStatistiken;
+//Schule als beispiel beim unterschied zwischen userSnap und userSnap.data()
