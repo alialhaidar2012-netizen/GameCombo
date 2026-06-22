@@ -128,8 +128,8 @@ function Schläger(x,y,breite,höhe){
         this.y = yNeu; 
  };
 } 
-var spieler= new Schläger(5,200,25,100);
-var ki= new Schläger(610, 200, 25, 100);
+var spieler= new Schläger(5,200,25,100,false, true);
+var ki= new Schläger(610, 200, 25, 100,true, false);
 
 let startY = 0;
 document.addEventListener("touchstart", function go(event){
