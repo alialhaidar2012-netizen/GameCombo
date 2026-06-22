@@ -176,7 +176,7 @@
         loginWithGoogle
     } from './Rangliste_und_Anmelden.js';
         
-        async function handleRegister() {
+        window.handleRegister=async function() {
             const email = document.getElementById('email').value;
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
@@ -224,7 +224,7 @@
             }
         }
         
-        async function handleGoogleRegister() {
+        window.handleGoogleRegister = async function() {
             const result = await loginWithGoogle();
             
             if (result.success) {
@@ -237,14 +237,14 @@
             }
         }
         
-        function showError(msg) {
+        window.showError=function(msg) {
             const el = document.getElementById('errorMsg');
             el.textContent = msg;
             el.style.display = 'block';
             setTimeout(() => el.style.display = 'none', 4000);
         }
         
-        function showSuccess(msg) {
+        window.showSuccess=function(msg) {
             const el = document.getElementById('successMsg');
             el.textContent = msg;
             el.style.display = 'block';
