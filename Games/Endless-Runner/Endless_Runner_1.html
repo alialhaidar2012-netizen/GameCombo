@@ -66,7 +66,7 @@ stopp: async function() {
      if(this.strecke >= 25000){
      let level = 1;
      let gewonnen = true;
-     const result = await spielBeenden("E-R", level, true);
+     const result = await spielBeenden("E-R", this.level, true);
      localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", result.erhalteneTrophies);
      localStorage.setItem("Victory", "true")
@@ -74,8 +74,8 @@ stopp: async function() {
      }else{
      let level = 1;
      let gewonnen = false;
-     const result = await spielBeenden("E-R", level, false);
-     localStorage.setItem("Score", strecke);
+     const result = await spielBeenden("E-R", this.level, false);
+     localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", result.erhalteneTrophies);
      localStorage.setItem("Victory", "false")
      window.location.replace("../Game_Over.html");
