@@ -102,7 +102,7 @@ html, body {
   function setze(kästchen) {
      if (kästchen.innerText != "" || gewonnen) return;
      zuege++;
-     turn.innerText = "Player "+aktuellerSpieler+"'s turn"
+     document.getElementById("turn").innerText = "Player "+aktuellerSpieler+"'s turn"
      kästchen.innerText = aktuellerSpieler;
      aktuellerSpieler == "O" ? aktuellerSpieler = "X" : aktuellerSpieler = "O";
      pruefeSpielfeld();
