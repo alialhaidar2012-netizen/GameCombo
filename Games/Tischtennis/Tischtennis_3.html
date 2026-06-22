@@ -92,13 +92,6 @@ zeichneSchläger(spieler);
 zeichneSchläger(ki);
 zeichneBall(ball);
 }
-function zeichne(){
-ctx.fillStyle="black";
-ctx.fillRect(0,0,640,480);
-zeichneSchläger(spieler);
-zeichneSchläger(ki);
-zeichneBall(ball);
-}
 function Schläger(x,y,breite,höhe, ki=false, spieler= false){
    this.x=x;
    this.y=y;
@@ -143,7 +136,7 @@ function Schläger(x,y,breite,höhe, ki=false, spieler= false){
  };
 }
 var spieler= new Schläger(5,200,25,100,false,true);
-var ki= new Schläger(610, 200, 25, 100,false,true);
+var ki= new Schläger(610, 200, 25, 100,true, false);
 
 let startY = 0;
 document.addEventListener("touchstart", function go(event) {
