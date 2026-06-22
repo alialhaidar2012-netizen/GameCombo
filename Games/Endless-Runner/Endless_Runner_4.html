@@ -62,7 +62,7 @@ var welt= {
     ],
 stopp: async function() {
      this.autoScroll= false;
-     if(strecke >= 40000){
+     if(this.strecke >= 40000){
       let level = 4;
      let gewonnen = true;
      const result = await spielBeenden("E-R", level, true);
