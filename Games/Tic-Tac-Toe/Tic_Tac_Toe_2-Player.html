@@ -140,12 +140,6 @@ html, body {
     window.location.replace("../Draw.html");
     }
   }
-  async  function giveTrophie(spielName, level, gewonnen){
-      const result = await spielBeenden("TTT_2P", level, gewonnen);
-      localStorage.setItem("Trophies", result.erhalteneTrophies);
-      localStorage.setItem("Victory", gewonnen? "true" : "false");
-      
-    }
   </script>
   </body>
   </html>
