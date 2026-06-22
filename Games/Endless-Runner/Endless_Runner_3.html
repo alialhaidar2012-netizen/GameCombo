@@ -66,8 +66,8 @@ stopp: async function() {
      if(this.strecke >= 35000){
       let level = 3;
      let gewonnen = true;
-     const result = await spielBeenden("E-R", level, true);
-     localStorage.setItem("Score", strecke);
+     const result = await spielBeenden("E-R", this.level, true);
+     localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", result.erhalteneTrophies);
      localStorage.setItem("Victory", "true")
      window.location.replace("../Victory.html");
