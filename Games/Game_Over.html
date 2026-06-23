@@ -143,14 +143,9 @@
   <button id="Home" onclick="window.location.href='../index.html'">Back to Menu</button>
 
   <script>
-    // Trophäen anzeigen - KORRIGIERT
-    function showTrophies() {
+  function showTrophies() {
       let trophies = localStorage.getItem("Trophies");
-      if (trophies && !isNaN(trophies)) {
-        document.getElementById('trophyValue').innerText = trophies;
-      } else {
-        document.getElementById('trophyValue').innerText = "0";
-      }
+      document.getElementById('trophyValue').innerText = trophies;
     }
     showTrophies();
 
