@@ -179,11 +179,10 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
       console.warn("You arent logged in - no Trophies saved");
     }
 if(gewonnen){
-  let gewonnen = true;
   localStorage.setItem("Victory","true");
   window.location.replace("../Victory.html");
 } else {
-  let gewonnen = false;
+  gewonnen = false;
   localStorage.setItem("Victory","false");
   window.location.replace("../GameOver.html");
 }
