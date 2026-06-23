@@ -65,7 +65,7 @@ stopp: async function() {
      if(this.strecke >= 40000){
       let level = 4;
      let gewonnen = true;
-     const result = await spielBeenden("E-R", this.level, true);
+     const result = await spielBeenden("E-R", level, true);
      localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", result.erhalteneTrophies);
      localStorage.setItem("Victory", "true")
@@ -73,7 +73,7 @@ stopp: async function() {
      }else{
      let level = 4;
      let gewonnen = false;
-     const result = await spielBeenden("E-R", this.level, false);
+     const result = await spielBeenden("E-R", level, false);
      localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", result.erhalteneTrophies);
      localStorage.setItem("Victory", "false")
