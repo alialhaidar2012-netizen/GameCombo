@@ -180,7 +180,7 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
     }
 if(gewonnen){
   let gewonnen = true;
-  localStorage.setItem("Victory","gewonnen");
+  localStorage.setItem("Victory","true");
   window.location.replace("../Victory.html");
 } else {
   let gewonnen = false;
