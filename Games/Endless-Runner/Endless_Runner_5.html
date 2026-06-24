@@ -68,7 +68,7 @@ stopp: async function() {
      let gewonnen = true;
      const result = await spielBeenden("E-R", level, true);
      localStorage.setItem("Score", this.strecke);
-     localStorage.setItem("Trophies", result.erhalteneTrophies);
+     localStorage.setItem("Trophies", trophies);
      localStorage.setItem("Victory", "true")
      window.location.replace("../Victory.html");
      }else{
@@ -76,7 +76,7 @@ stopp: async function() {
      let gewonnen = false;
      const result = await spielBeenden("E-R", level, false);
      localStorage.setItem("Score", this.strecke);
-     localStorage.setItem("Trophies", result.erhalteneTrophies);
+     localStorage.setItem("Trophies", trophies);
      localStorage.setItem("Victory", "false")
      window.location.replace("../Game_Over.html");
      }
