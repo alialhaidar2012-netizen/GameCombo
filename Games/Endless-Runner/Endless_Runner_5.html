@@ -63,20 +63,20 @@ var welt= {
     ],
 stopp: async function() {
      this.autoScroll= false;
+   
+     let level = 5;
+     const regel= getTrophiesforLevel("E_R", level);
+   
      if(this.strecke >= 45000){
-      let level = 5;
-     let gewonnen = true;
      const result = await spielBeenden("E-R", level, true);
      localStorage.setItem("Score", this.strecke);
-     localStorage.setItem("Trophies", trophies);
+     localStorage.setItem("Trophies", regel.sieg);
      localStorage.setItem("Victory", "true")
      window.location.replace("../Victory.html");
      }else{
-     let level = 5;
-     let gewonnen = false;
      const result = await spielBeenden("E-R", level, false);
      localStorage.setItem("Score", this.strecke);
-     localStorage.setItem("Trophies", trophies);
+     localStorage.setItem("Trophies", -regel.verlust);
      localStorage.setItem("Victory", "false")
      window.location.replace("../Game_Over.html");
      }
