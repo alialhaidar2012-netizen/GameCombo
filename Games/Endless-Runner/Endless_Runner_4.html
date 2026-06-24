@@ -26,7 +26,8 @@
 <canvas id="canvas" width="640" height="480"></canvas>
      <script type="module">
 import{
-   spielBeenden
+   spielBeenden,
+   getTrophiesforLevel
 } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
      if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedRunner") !== "true") {
       window.location.replace("Endless_Runner_Tutorial.html");
@@ -62,20 +63,20 @@ var welt= {
     ],
 stopp: async function() {
      this.autoScroll= false;
+   
+     let level = 4;
+     const regel= getTrophiesforLevel("E_R", level);
+   
      if(this.strecke >= 40000){
-      let level = 4;
-     let gewonnen = true;
      const result = await spielBeenden("E-R", level, true);
      localStorage.setItem("Score", this.strecke);
-     localStorage.setItem("Trophies", result.erhalteneTrophies);
+     localStorage.setItem("Trophies", regel.sieg);
      localStorage.setItem("Victory", "true")
      window.location.replace("../Victory.html");
      }else{
-     let level = 4;
-     let gewonnen = false;
      const result = await spielBeenden("E-R", level, false);
      localStorage.setItem("Score", this.strecke);
-     localStorage.setItem("Trophies", result.erhalteneTrophies);
+     localStorage.setItem("Trophies", -regel.verlust);
      localStorage.setItem("Victory", "false")
      window.location.replace("../Game_Over.html");
      }
