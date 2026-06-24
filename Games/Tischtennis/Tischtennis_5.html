@@ -25,7 +25,8 @@
 <canvas id="canvas" width="640" height="480"></canvas>
      <script type="module">
 import{
-     spielBeenden
+     spielBeenden,
+     getTrophiesforLevel
    } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
 
         if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTischtennis") !== "true") {
@@ -159,21 +160,21 @@ yUmkehren: function() {
     this.ySpeed *= -1;
   },
   reset: async function() {
-     if (this.x == 0 || this.x < 0) {
-         let level = 5;
-         let gewonnen = false;
-         const result = await spielBeenden("Tischtennis", level, false);
-         localStorage.setItem("Trophies", result.erhalteneTrophies);
-         localStorage.setItem("Victory", "false");
-         window.location.replace("../Game_Over.html"); 
-    } else {
         let level = 5;
-        let gewonnen = true;
-        const result = await spielBeenden("Tischtennis", level, true);
-        localStorage.setItem("Trophies", result.erhalteneTrophies);
-        localStorage.setItem("Victory", "true");
-        window.location.replace("../Victory.html");
-              }
+        const regel = getTrophiesforLevel("Tischtennis", level);
+    if(this.x == 0 || this.x < 0){
+        let gewonnen = false;
+    await spielBeenden("Tischtennis", level, false);
+        localStorage.setItem("Trophies", -regel.verlust);
+        localStorage.setItem("Victory", "false");
+        window.location.replace("../Game_Over.html");
+    }else{
+    let gewonnen = true;
+    await spielBeenden("Tischtennis", level, true);
+      localStorage.setItem("Trophies", regel.sieg);
+      localStorage.setItem("Victory", "true");
+      window.location.replace("../Victory.html");
+    }
      this.x= 320;
      this.y= 240;
      this.xSpeed= 2;
