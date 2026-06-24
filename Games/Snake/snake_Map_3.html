@@ -102,25 +102,24 @@ tick: async function() {
   ctx.scale(scaleX, scaleY);
   
   var ergebnis = schlange.gehe();
-  if (ergebnis == "Ende") {
-    let level = 3;
-    if (spiel.punkte >= 10) {
-      let gewonnen = true; 
-      const result = await spielBeenden("snake", level, true);
-      localStorage.setItem("Score", spiel.punkte);
-      localStorage.setItem("Trophies", result.erhalteneTrophies);
-      localStorage.setItem("Victory", "true");
-      window.location.replace("../Victory.html");
-    } else {
-      let gewonnen = false;
-      const result = await spielBeenden("snake", level, false);
-      localStorage.setItem("Score", spiel.punkte);
-      localStorage.setItem("Trophies", result.erhalteneTrophies);
-      localStorage.setItem("Victory", "false");
-      window.location.replace("../Game_Over.html");
-    }
-    return;
-  }
+            if (ergebnis == "Ende") {
+                let level = 3;
+                const regeln = getTrophiesforLevel("snake", level);
+                if (spiel.punkte >= 10) {
+                    const result = await spielBeenden("snake", level, true);
+                    localStorage.setItem("Score", spiel.punkte);
+                    localStorage.setItem("Trophies", regeln.sieg);
+                    localStorage.setItem("Victory", "true");
+                    window.location.replace("../Victory.html");
+                } else {
+                    const result = await spielBeenden("snake", level, false);
+                    localStorage.setItem("Score", spiel.punkte);
+                    localStorage.setItem("Trophies", -regeln.verlust);
+                    localStorage.setItem("Victory", "false");
+                    window.location.replace("../Game_Over.html");
+                }
+                return;
+            }
   
   grafik.zeichneSpiel();
   ctx.restore();
