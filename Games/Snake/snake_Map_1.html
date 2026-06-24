@@ -100,11 +100,11 @@ import{
 
             var ergebnis = schlange.gehe();
 
-            const regeln = getTrophiesforLevel(snake, level);
-
             if (ergebnis == "Ende") {
                 let level = 1;
+                const regeln = getTrophiesforLevel("snake", level);
                 if (spiel.punkte >= 10) {
+                    let gewonnen = false;
                     const result = await spielBeenden("snake", level, true);
                     localStorage.setItem("Score", spiel.punkte);
                     localStorage.setItem("Trophies", regeln.sieg);
