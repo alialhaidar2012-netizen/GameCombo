@@ -104,14 +104,12 @@ import{
                 let level = 1;
                 const regeln = getTrophiesforLevel("snake", level);
                 if (spiel.punkte >= 10) {
-                    let gewonnen = false;
                     const result = await spielBeenden("snake", level, true);
                     localStorage.setItem("Score", spiel.punkte);
                     localStorage.setItem("Trophies", regeln.sieg);
                     localStorage.setItem("Victory", "true");
                     window.location.replace("../Victory.html");
                 } else {
-                    gewonnen = false;
                     const result = await spielBeenden("snake", level, false);
                     localStorage.setItem("Score", spiel.punkte);
                     localStorage.setItem("Trophies", -regeln.verlust);
