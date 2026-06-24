@@ -151,7 +151,6 @@
                 const regeln = getTrophiesforLevel("TTT_Ki", level);
                 const result = await spielBeenden("TTT_Ki", level, false);
                 localStorage.setItem("Trophies", regeln.sieg);
-                localStorage.setItem("Trophies", result.erhalteneTrophies);
                 localStorage.setItem("Victory", "false");
                 window.location.replace("../Draw.html");
                 return;
