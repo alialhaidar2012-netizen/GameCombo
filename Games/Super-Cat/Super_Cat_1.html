@@ -166,11 +166,13 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
     const regeln = getTrophiesforLevel("Super_Cat", level)
 if(gewonnen){
   const result = await spielBeenden("Super_Cat", level, true);
-  localStorage.setItem("Victory", regeln.sieg);
+  localStorage.setItem("Victory", "true");
+  localStorage.setItem("Trophies", regeln.sieg);
   window.location.replace("../Victory.html");
 } else {
   const result = await spielBeenden("Super_Cat", level, false);
-  localStorage.setItem("Victory", -regeln.verlust);
+  localStorage.setItem("Victory", "false");
+  localStorage.setItem("Trophies", -regeln.sieg);
   window.location.replace("../GameOver.html");
 }
 };
