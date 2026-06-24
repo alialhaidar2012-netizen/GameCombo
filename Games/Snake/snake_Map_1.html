@@ -45,7 +45,8 @@
 <button id="Rechts" class="buttons">D</button>
      <script type="module">
 import{
-   spielBeenden
+   spielBeenden, 
+    getTrophiesforLevel
 } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
     
     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedSnake") !== "true") {
@@ -98,20 +99,22 @@ import{
             ctx.scale(scaleX, scaleY);
 
             var ergebnis = schlange.gehe();
+
+            const regeln = getTrophiesforLevel(snake, level);
+
             if (ergebnis == "Ende") {
                 let level = 1;
                 if (spiel.punkte >= 10) {
-                    let gewonnen = true;
                     const result = await spielBeenden("snake", level, true);
                     localStorage.setItem("Score", spiel.punkte);
-                    localStorage.setItem("Trophies", result.erhalteneTrophies);
+                    localStorage.setItem("Trophies", regeln.sieg);
                     localStorage.setItem("Victory", "true");
                     window.location.replace("../Victory.html");
                 } else {
-                    let gewonnen = false;
+                    gewonnen = false;
                     const result = await spielBeenden("snake", level, false);
                     localStorage.setItem("Score", spiel.punkte);
-                    localStorage.setItem("Trophies", result.erhalteneTrophies);
+                    localStorage.setItem("Trophies", -regeln.verlust);
                     localStorage.setItem("Victory", "false");
                     window.location.replace("../Game_Over.html");
                 }
