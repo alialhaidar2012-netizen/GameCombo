@@ -55,8 +55,8 @@
 
  <script type="module">
    import{
-     getCurrentUser,
-     spielBeenden
+     spielBeenden,
+     getTrophiesforLevel
    } 
      from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
    
@@ -161,29 +161,16 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
     stopp: async function(grund){
        this.beendet = true;
        window.clearTimeout(this.timer);
-    let level = 1;
     let gewonnen = (grund === "gewonnen");
-    const currentUser = getCurrentUser();
-    if(currentUser){
-      try{
-        const result = await spielBeenden("Super_Cat", level, gewonnen);
-        if(result && result.success){
-          console.log("Trophies saved");
-        }else{
-          console.warn("Trophies can't be saved");
-        }
-      }catch(error){
-        console.error("Saving error:", error);
-      }
-    }else{
-      console.warn("You arent logged in - no Trophies saved");
-    }
+    let level = 1;
+    const regeln = getTrophiesforLevel("Super_Cat", level)
 if(gewonnen){
-  localStorage.setItem("Victory","true");
+  const result = await spielBeenden("Super_Cat", level, true);
+  localStorage.setItem("Victory", regeln.sieg);
   window.location.replace("../Victory.html");
 } else {
-  gewonnen = false;
-  localStorage.setItem("Victory","false");
+  const result = await spielBeenden("Super_Cat", level, false);
+  localStorage.setItem("Victory", -regeln.verlust);
   window.location.replace("../GameOver.html");
 }
 };
