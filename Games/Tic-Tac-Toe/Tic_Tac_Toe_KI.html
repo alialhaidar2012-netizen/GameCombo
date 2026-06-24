@@ -77,10 +77,11 @@
     </div>
      <script type="module">
     import{
-     spielBeenden
+     spielBeenden,
+     getTrophiesforLevel
    } 
      from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
-   
+    let gewonnen = false
     let zuege= 0;
         if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTTT") !== "true") {
         window.location.replace("Tic-Tac-Toe_Tutorial.html");
@@ -138,9 +139,9 @@
                 zuege++
                 if (pruefeGewinner("X")) {
                     let level = 1;
+                    gewonnen = true;
                     const regeln = getTrophiesforLevel("TTT_Ki", level);
                     await spielBeenden("TTT_Ki", level, true);
-                    localStorage.setItem("Trophies", regeln.sieg);
                     localStorage.setItem("Trophies", regeln.sieg);
                     localStorage.setItem("Victory", "true");
                     window.location.replace("../Victory.html");
