@@ -12,7 +12,6 @@ html, body {
     font-family: sans-serif;
 }
 
-/* ===== LOGOUT BUTTON ===== */
 .special-buttons {
     position: fixed;
     top: 10px;
@@ -37,7 +36,6 @@ html, body {
     background-color: #c82333;
 }
 
-/* ===== WRAPPER ===== */
 #wrapper {
     display: flex;
     justify-content: center;
@@ -48,13 +46,11 @@ html, body {
     flex-wrap: wrap;
 }
 
-/* ===== SPIELE-BUTTONS ===== */
 #button-container {
     display: flex;
     flex-direction: column;
     gap: 15px;
     flex-shrink: 0;
-    flex: 0 1 auto;
 }
 
 #button-container button {
@@ -86,6 +82,7 @@ html, body {
     flex-shrink: 0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     border: 2px solid #FFD700;
+    margin-left: auto; /* Schiebt Statistiken ganz nach rechts */
 }
 
 .widgets h3 {
@@ -158,14 +155,13 @@ html, body {
         width: 100%;
         max-width: 380px;
         order: -1;
-        padding: 20px 15px;
+        margin-left: 0; /* Auf mobil zentriert */
     }
 
     #button-container {
         order: 0;
         width: 100%;
         align-items: center;
-        flex: none;
     }
 
     #button-container button {
