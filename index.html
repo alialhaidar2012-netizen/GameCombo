@@ -53,7 +53,7 @@
                     const spieleListe = Object.keys(spiele)
                         .map(name => {
                             const vollName = spielNamen[name] || name;
-                            return `${vollName}: ${spiele[name]} Trophies`;
+                            return `${vollName}: ${spiele[name]} 🏆`;
                         })
                         .join('\n');
                     document.getElementById('uebersicht').innerText = spieleListe || "No games played";
