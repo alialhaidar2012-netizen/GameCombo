@@ -1,1 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Top 100 - GameCombo</title>
+    <link rel="manifest" href="manifest.json" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            background: linear-gradient(135deg, #0a0a2e, #1a1a4e, #0a0a2e);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid #FFD700;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            color: #FFD700;
+            font-size: 32px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc3545, #b02a37);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(220, 53, 69, 0.4);
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.6);
+            background: linear-gradient(135deg, #c82333, #9a1f2b);
+        }
+
+        .loading {
+            text-align: center;
+            color: #FFD700;
+            font-size: 18px;
+            padding: 40px 0;
+        }
+
+        .rank-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #FFD700;
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .rank-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .rank-item .rank-number {
+            font-weight: 700;
+            color: #FFD700;
+            min-width: 50px;
+            font-size: 18px;
+        }
+
+        .rank-item .rank-username {
+            flex: 1;
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .rank-item .rank-trophies {
+            font-weight: 700;
+            color: #FFD700;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 14px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .rank-item .rank-games {
+            color: #aaa;
+            font-size: 13px;
+            margin-left: 15px;
+        }
+
+        .rank-item.top-1 {
+            border-left-color: #FFD700;
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        .rank-item.top-2 {
+            border-left-color: #C0C0C0;
+            background: rgba(192, 192, 192, 0.1);
+        }
+
+        .rank-item.top-3 {
+            border-left-color: #CD7F32;
+            background: rgba(205, 127, 50, 0.1);
+        }
+
+        .no-players {
+            text-align: center;
+            color: #aaa;
+            font-size: 18px;
+            padding: 40px 0;
+        }
+
+        .error {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 18px;
+            padding: 40px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .rank-item {
+                padding: 10px 12px;
+                flex-wrap: wrap;
+            }
+
+            .rank-item .rank-number {
+                min-width: 35px;
+                font-size: 15px;
+            }
+
+            .rank-item .rank-username {
+                font-size: 14px;
+            }
+
+            .rank-item .rank-trophies {
+                font-size: 13px;
+                padding: 3px 10px;
+            }
+
+            .rank-item .rank-games {
+                font-size: 11px;
+                margin-left: 0;
+                width: 100%;
+                margin-top: 4px;
+                padding-left: 35px;
+            }
+
+            .back-btn {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">Back</a>
+        <h1>🏆 Top 100</h1>
+        <p class="subtitle">The best players in the world</p>
+        
+        <div id="rankContainer">
+            <div class="loading">Loading ranking...</div>
+        </div>
+    </div>
+<script type="module">
+  import{getTrophiesRangliste, getCurrentUser} from'../Benutzerkonten_und Ranglisten/Rangliste_und_Anmelden.js'
+  const rankContainer = document.getElementById('rankContainer');
+  async funtion loadTop100(){
+    try{
+      const rangliste = await getTrophiesRangliste();
+      if(!rangliste || rangliste === 0){
+        rankContainer.innerHTML = '<div class="no-playerrs">Please check your conection to the internet</div>'
+        return;
+      }
+      const currentUser = getCurrentUser();
+      const currentUsername = currentUser ? currentUser.username : null;
+      let html= '';
+      rangliste.forEach((user, index) =>{
+       const rank = index +1;
+       const isCurrentUser = user.username === currentUsername;
+       const userClass = isCurrentUser ? 'rank-item current user': 'rank-item'
+       html += 
+         ˋ <div class="${userClass}">
+         <span class="rank-number">#${rank}</span>
+         <span class="rank-username">#${user.username} ${isCurrentUser ? ' (you)': ''}</span>
+         <span class="rank-trophies">#${user.trophies}</span>
+         </div>
+         ˋ;
+      });
+    rankContainer.innerHTML = html;
+    }catch (error){
+       console.error('Error:', error);
+       rankContainer.innerHTMl = '<div class="error">Please check your internet conection</div>';
+    }
+    
+  }
+  loadTop100();
+</script>
+</body>
+</html>
