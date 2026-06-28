@@ -208,7 +208,7 @@ async function getTrophiesRangliste() {
     const q = query(
       collection(db, "users"),
       orderBy("gesamtTrophies", "desc"),
-      limit(10)
+      limit(100)
     );
     const querySnapshot = await getDocs(q);
     const rangliste = [];
