@@ -55,7 +55,7 @@
                             const vollName = spielNamen[name] || name;
                             return `${vollName}: ${spiele[name]} Trophies`;
                         })
-                        .join(', ');
+                        .join('\n');
                     document.getElementById('uebersicht').innerText = spieleListe || "No games played";
                     
                     if (stats.registriertAm) {
