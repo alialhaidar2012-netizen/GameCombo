@@ -51,6 +51,9 @@ html, body {
     flex-direction: column;
     gap: 15px;
     flex-shrink: 0;
+    flex: 1; /* Nimmt verfügbaren Platz ein */
+    max-width: 300px; /* Begrenzt die Breite */
+    align-items: center;
 }
 
 #button-container button {
@@ -70,7 +73,6 @@ html, body {
     background-color: orange;
 }
 
-/* ===== STATISTIK-WIDGET ===== */
 .widgets {
     width: 380px;
     min-width: 300px;
@@ -82,7 +84,7 @@ html, body {
     flex-shrink: 0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     border: 2px solid #FFD700;
-    margin-left: auto; /* Schiebt Statistiken ganz nach rechts */
+    margin-left: auto; /* Schiebt Widget ganz nach rechts */
 }
 
 .widgets h3 {
@@ -151,14 +153,9 @@ html, body {
         gap: 20px;
     }
 
-    .widgets {
-        width: 100%;
-        max-width: 380px;
-        order: -1;
-        margin-left: 0; /* Auf mobil zentriert */
-    }
-
     #button-container {
+        flex: none;
+        max-width: 100%;
         order: 0;
         width: 100%;
         align-items: center;
@@ -167,6 +164,13 @@ html, body {
     #button-container button {
         width: 100%;
         max-width: 300px;
+    }
+
+    .widgets {
+        width: 100%;
+        max-width: 380px;
+        order: -1;
+        margin-left: 0;
     }
 
     .widgets h3 {
