@@ -6,34 +6,53 @@
     <title>snake-Map1</title>
       <link rel="manifest" href="../../manifest.json" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; overflow: hidden; background: lightgray; }
-        #canvas {
-            display: block;
-            position: absolute;
-        }
-        #points {
-            position: absolute; top: 3vmin; left: 50%; transform: translateX(-50%);
-            background-color: darkblue; color: yellow; padding: 2vmin 5vmin;
-            border-radius: 3vmin; font-size: 4vmin; font-weight: bold;
-            text-align: center; z-index: 5; white-space: nowrap;
-        }
-        .buttons {
-            width: 12vmin; height: 12vmin;
-            border: 2px solid black;
-            background-color: yellow;
-            color: black;
-            position: fixed;
-            z-index: 2;
-            font-size: 5vmin;
-            font-weight: bold;
-            border-radius: 2vmin;
-            bottom: 5vmin;
-        }
-        #Oben { left: 5vmin; bottom: 18vmin; }
-        #Unten { left: 5vmin; bottom: 4vmin; }
-        #Links { right: 17vmin; bottom: 11vmin; }
-        #Rechts { right: 3vmin; bottom: 11vmin; }
+.buttons {
+    width: 15vmin;
+    height: 15vmin;
+    border: 3px solid black;
+    background-color: yellow;
+    color: black;
+    position: fixed;
+    z-index: 2;
+    font-size: 6vmin;
+    font-weight: bold;
+    border-radius: 3vmin;
+    bottom: 5vmin;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+#Oben { left: 5vmin; bottom: 20vmin; }
+#Unten { left: 5vmin; bottom: 4vmin; }
+#Links { right: 20vmin; bottom: 12vmin; }
+#Rechts { right: 4vmin; bottom: 12vmin; }
+
+/* Extra große Buttons für sehr kleine Bildschirme */
+@media (max-width: 500px) {
+    .buttons {
+        width: 18vmin;
+        height: 18vmin;
+        font-size: 7vmin;
+        border-width: 4px;
+    }
+    #Oben { left: 4vmin; bottom: 22vmin; }
+    #Unten { left: 4vmin; bottom: 3vmin; }
+    #Links { right: 22vmin; bottom: 12vmin; }
+    #Rechts { right: 3vmin; bottom: 12vmin; }
+}
+
+@media (max-width: 400px) {
+    .buttons {
+        width: 20vmin;
+        height: 20vmin;
+        font-size: 8vmin;
+    }
+    #Oben { left: 3vmin; bottom: 24vmin; }
+    #Unten { left: 3vmin; bottom: 3vmin; }
+    #Links { right: 24vmin; bottom: 12vmin; }
+    #Rechts { right: 3vmin; bottom: 12vmin; }
+}
     </style>
 </head>
 <body>
