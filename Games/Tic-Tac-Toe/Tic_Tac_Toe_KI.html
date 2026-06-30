@@ -81,6 +81,9 @@
      getTrophiesforLevel
    } 
      from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+
+            sessionStorage.clear();
+         
     let gewonnen = false
     let zuege= 0;
         if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTTT") !== "true") {
