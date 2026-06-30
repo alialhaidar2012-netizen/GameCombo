@@ -81,7 +81,10 @@
      getTrophiesforLevel
    } 
      from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
-    let gewonnen = false
+   
+         sessionStorage.clear();
+    
+         let gewonnen = false
     let zuege= 0;
         if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTTT") !== "true") {
         window.location.replace("Tic-Tac-Toe_Tutorial.html");
