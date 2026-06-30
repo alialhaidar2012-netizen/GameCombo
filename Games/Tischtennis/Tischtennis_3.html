@@ -29,6 +29,8 @@ import{
      getTrophiesforLevel
    } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
 
+            sessionStorage.clear();
+         
         if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTischtennis") !== "true") {
         window.location.replace("Tischtennis_Tutorial.html");
     }
