@@ -93,11 +93,12 @@ html, body {
    } 
      from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
 
-   sessionStorage.clear();
 
     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTTT") !== "true") {
       window.location.replace("Tic-Tac-Toe_Tutorial.html");
     }
+   sessionStorage.clear();
+       
   let level = 1;
   let zuege = 0;
   let gewonnen = false;
