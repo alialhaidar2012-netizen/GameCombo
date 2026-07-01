@@ -82,13 +82,13 @@
    } 
      from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
 
-            sessionStorage.clear();
-         
     let gewonnen = false
     let zuege= 0;
         if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedTTT") !== "true") {
         window.location.replace("Tic-Tac-Toe_Tutorial.html");
-    }
+        }
+   sessionStorage.clear();
+         
         const felder = document.querySelectorAll('.feld');
         let spielerDran = false;
         setTimeout(computerDran, 1000);
