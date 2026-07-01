@@ -59,10 +59,11 @@
      getTrophiesforLevel
    } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
 
-   sessionStorage.clear();
     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedCat") !== "true") {
         window.location.replace("Super_Cat_Tutorial.html");
     }
+   sessionStorage.clear();
+   
 const canvas=document.getElementById("Spiel");
 let ctx=canvas.getContext("2d");
 
