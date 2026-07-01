@@ -72,6 +72,8 @@
     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedSnake") !== "true") {
       window.location.replace("Snake_Tutorial.html");
     }
+   sessionStorage.clear();
+       
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
