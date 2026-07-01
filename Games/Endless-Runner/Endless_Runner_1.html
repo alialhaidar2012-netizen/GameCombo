@@ -24,13 +24,15 @@
      </head>
      <body>
 <canvas id="canvas" width="640" height="480"></canvas>
+        
+   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
      <script type="module">
    import {
       spielBeenden,
       getTrophiesforLevel
    } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
 
-   
      if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedRunner") !== "true") {
     window.location.replace("Endless_Runner_Tutorial.html");
     }
