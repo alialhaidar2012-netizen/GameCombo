@@ -12,36 +12,7 @@ html, body {
     font-family: sans-serif;
 }
 
-/* ===== TOP 100 BUTTON ===== */
-#Top100 {  /* ← Großes T! */
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #00008B;
-    border: none;
-    border-radius: 8px;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-#Top100:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5);
-    background: linear-gradient(135deg, #FFE44D, #FFB347);
-}
-
-#Top100:active {
-    transform: translateY(0px);
-    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
-}
-
-/* ===== REST DEINES CODES ===== */
+/* ===== LOGOUT BUTTON ===== */
 .special-buttons {
     position: fixed;
     top: 10px;
@@ -66,6 +37,7 @@ html, body {
     background-color: #c82333;
 }
 
+/* ===== WRAPPER ===== */
 #wrapper {
     display: flex;
     justify-content: center;
@@ -76,6 +48,7 @@ html, body {
     flex-wrap: wrap;
 }
 
+/* ===== SPIELE-BUTTONS ===== */
 #button-container {
     display: flex;
     flex-direction: column;
@@ -103,6 +76,7 @@ html, body {
     background-color: orange;
 }
 
+/* ===== STATISTIK-WIDGET ===== */
 .widgets {
     width: 380px;
     min-width: 300px;
@@ -165,6 +139,7 @@ html, body {
     margin-bottom: 0;
 }
 
+/* ===== GAME OVERVIEW MIT ABSÄTZEN ===== */
 #uebersicht {
     display: block;
     white-space: pre-line;
@@ -173,6 +148,36 @@ html, body {
     font-size: 15px;
 }
 
+/* ===== TOP 100 BUTTON ===== */
+#Top100 {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #00008B;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#Top100:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5);
+    background: linear-gradient(135deg, #FFE44D, #FFB347);
+}
+
+#Top100:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+}
+
+/* ===== MOBILE ANSICHT ===== */
 @media (max-width: 750px) {
     #wrapper {
         flex-direction: column;
@@ -219,7 +224,7 @@ html, body {
     #uebersicht {
         font-size: 14px;
     }
-    
+
     #Top100 {
         font-size: 15px;
         padding: 10px 16px;
@@ -256,7 +261,7 @@ html, body {
     #uebersicht {
         font-size: 12px;
     }
-    
+
     #Top100 {
         font-size: 13px;
         padding: 8px 14px;
