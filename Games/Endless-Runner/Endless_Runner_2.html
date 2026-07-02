@@ -70,16 +70,16 @@ stopp: async function() {
      this.autoScroll= false;
    
      let level = 2;
-     const regel= getTrophiesforLevel("E_R", level);
+     const regel= getTrophiesforLevel("E-R", level);
    
      if(this.strecke >= 30000){
-     const result = await spielBeenden("E_R", level, true);
+     const result = await spielBeenden("E-R", level, true);
      localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", regel.sieg);
      localStorage.setItem("Victory", "true")
      window.location.replace("../Victory.html");
      }else{
-     const result = await spielBeenden("E_R", level, false);
+     const result = await spielBeenden("E-R", level, false);
      localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", -regel.verlust);
      localStorage.setItem("Victory", "false")
@@ -117,7 +117,7 @@ entsorgeKacheln: function() {
    }
 },
 höheDesBodens: function(spielerX){
-    for(index in this.bodenKacheln) {
+    for(let index in this.bodenKacheln) {
         var kachel = this.bodenKacheln[index];
         if(kachel.x <= spielerX && kachel.x + kachel.breite>= spielerX){
            return kachel.höhe;
