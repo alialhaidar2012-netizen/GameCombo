@@ -69,7 +69,7 @@ stopp: async function() {
      this.autoScroll= false;
    
      let level = 3;
-     const regel= getTrophiesforLevel("E_R", level);
+     const regel= getTrophiesforLevel("E-R", level);
    
      if(this.strecke >= 35000){
      const result = await spielBeenden("E-R", level, true);
@@ -116,7 +116,7 @@ entsorgeKacheln: function() {
    }
 },
 höheDesBodens: function(spielerX){
-    for(index in this.bodenKacheln) {
+    for(let index in this.bodenKacheln) {
         var kachel = this.bodenKacheln[index];
         if(kachel.x <= spielerX && kachel.x + kachel.breite>= spielerX){
            return kachel.höhe;
