@@ -74,13 +74,13 @@ stopp: async function() {
      const result = await spielBeenden("E-R", level, true);
      localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", regel.sieg);
-     localStorage.setItem("Victory", "true")
+     localStorage.setItem("Victory", "true");
      window.location.replace("../Victory.html");
      }else{
      const result = await spielBeenden("E-R", level, false);
      localStorage.setItem("Score", this.strecke);
      localStorage.setItem("Trophies", -regel.verlust);
-     localStorage.setItem("Victory", "false")
+     localStorage.setItem("Victory", "false");
      window.location.replace("../Game_Over.html");
      }
 },
