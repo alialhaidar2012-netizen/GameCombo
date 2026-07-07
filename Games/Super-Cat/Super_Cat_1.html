@@ -178,7 +178,8 @@ if(gewonnen){
   localStorage.setItem("Victory", "false");
   localStorage.setItem("Trophies", -regeln.verlust);
   window.location.replace("../GameOver.html");
-}
+       }
+    }
 };
 let welt = {
     höhe: 480,
@@ -269,6 +270,7 @@ let spieler= {
           let state = currentLocation == "Ausgang" ? "gewonnen" : "verloren";
           spiel.stopp(state);
           return;
+        }
     },
     this.verarbeiteSteuerung();
     this.figur.tick();
