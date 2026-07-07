@@ -117,7 +117,7 @@ entsorgeKacheln: function() {
    }
 },
 höheDesBodens: function(spielerX){
-    for(index in this.bodenKacheln) {
+    for(let index in this.bodenKacheln) {
         var kachel = this.bodenKacheln[index];
         if(kachel.x <= spielerX && kachel.x + kachel.breite>= spielerX){
            return kachel.höhe;
