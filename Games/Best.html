@@ -214,7 +214,7 @@
     try{
       const rangliste = await getTrophiesRangliste();
       if(!rangliste || rangliste.length === 0){
-        rankContainer.innerHTML = '<div class="no-playerrs">Please check your conection to the internet</div>'
+        rankContainer.innerHTML = ˋ<div class="no-playerrs">Please check your conection to the internet</div>ˋ
         return;
       }
       const currentUser = getCurrentUser();
@@ -235,7 +235,7 @@
     rankContainer.innerHTML = html;
     }catch (error){
        console.error('Error:', error);
-       rankContainer.innerHTML = '<div class="error">Please check your internet conection</div>';
+       rankContainer.innerHTML = ˋ<div class="error">Please check your internet conection</div>ˋ;
     }
     
   }
