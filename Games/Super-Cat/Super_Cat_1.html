@@ -166,8 +166,8 @@ connect: function(keyInfo){
   ctx.save();
   ctx.scale(scaleX, scaleY);
       welt.tick();
-      spieler.tick();
       welt.zeichne();
+      spieler.tick();
       spieler.zeichne();
 ctx.restore();
 this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
@@ -181,7 +181,7 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
        window.clearTimeout(this.timer);
     let gewonnen = (grund === "gewonnen");
     let level = 1;
-    const regeln = getTrophiesforLevel("Super_Cat", level);
+    const regeln = await getTrophiesforLevel("Super_Cat", level);
 if(gewonnen){
   const result = await spielBeenden("Super_Cat", level, true);
   localStorage.setItem("Victory", "true");
