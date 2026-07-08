@@ -210,7 +210,7 @@
 <script type="module">
   import{getTrophiesRangliste, getCurrentUser} from'../Benutzerkonten_und Ranglisten/Rangliste_und_Anmelden.js'
   const rankContainer = document.getElementById('rankContainer');
-  async funtion loadTop100(){
+  async function loadTop100(){
     try{
       const rangliste = await getTrophiesRangliste();
       if(!rangliste || rangliste === 0){
