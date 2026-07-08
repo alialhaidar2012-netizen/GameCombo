@@ -265,12 +265,12 @@ async function meineStatistiken() {
 
 function getTrophiesforLevel(spielName, level) {
   const levelData = {
-    "snake": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
-    "Super_Cat": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
-    "TTT_Ki": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
-    "TTT_2P": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
-    "Tischtennis": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } },
-    "E-R": { 1: { sieg: 1, verlust: 1 }, 2: { sieg: 2, verlust: 2 }, 3: { sieg: 3, verlust: 3 }, 4: { sieg: 4, verlust: 4 }, 5: { sieg: 5, verlust: 5 } }
+    "snake": { 1: { sieg: 3, verlust: 1 }, 2: { sieg: 4, verlust: 2 }, 3: { sieg: 5, verlust: 3 } },
+    "Super_Cat": { 1: { sieg: 5, verlust: 1 } },
+    "TTT_Ki": { 1: { sieg: 3, verlust: 1 } },
+    "TTT_2P": { 1: { sieg: 3, verlust: 1 } },
+    "Tischtennis": { 1: { sieg: 3, verlust: 1 }, 2: { sieg: 4, verlust: 1 }, 3: { sieg: 5, verlust: 2 }, 4: { sieg: 6, verlust: 3 }, 5: { sieg: 10, verlust: 3 } },
+    "E-R": { 1: { sieg: 3, verlust: 1 }, 2: { sieg: 4, verlust: 1 }, 3: { sieg: 5, verlust: 2 }, 4: { sieg: 6, verlust: 3 }, 5: { sieg: 10, verlust: 3 } }
   };
   
   if (levelData[spielName] && levelData[spielName][level]) {
