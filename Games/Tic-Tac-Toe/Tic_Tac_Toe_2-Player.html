@@ -136,15 +136,15 @@ html, body {
     const regeln = getTrophiesforLevel("TTT_2P", level);
      if(erstes != "" && erstes == zweites && erstes == drittes && erstes == "X") {
     await spielBeenden("TTT_2P", level, true);
-       localStorage.setItem("Trophies", "regeln.sieg");
+       localStorage.setItem("Trophies", regeln.sieg);
          window.location.replace("../VictoryX.html");
        }else if(erstes != "" && erstes == zweites && erstes == drittes && erstes == "O") {
     await spielBeenden("TTT_2P", level, true);
-       localStorage.setItem("Trophies", "regeln.sieg");
+       localStorage.setItem("Trophies", regeln.sieg);
          window.location.replace("../VictoryO.html");
     }else if(zuege >= 9 && !gewonnen){
     await spielBeenden("TTT_2P", level, false);
-       localStorage.setItem("Trophies", "-regeln.verlust");
+       localStorage.setItem("Trophies", -regeln.verlust);
     window.location.replace("../Draw.html");
     }
   }
