@@ -140,6 +140,12 @@
             background: rgba(205, 127, 50, 0.1);
         }
 
+        /* ✅ Neu: Klasse für aktuellen Benutzer */
+        .rank-item.current-user {
+            border-left-color: #00ff00;
+            background: rgba(0, 255, 0, 0.15);
+        }
+
         .no-players {
             text-align: center;
             color: #aaa;
@@ -207,42 +213,54 @@
             <div class="loading">Loading ranking...</div>
         </div>
     </div>
-       <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
-
-<script type="module">
-  import{getTrophiesRangliste, getCurrentUser} from'../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js'
-  const rankContainer = document.getElementById('rankContainer');
-  async function loadTop100(){
-    try{
-      const rangliste = await getTrophiesRangliste();
-      if(!rangliste || rangliste.length === 0){
-        rankContainer.innerHTML = ˋ<div class="no-playerrs">Please check your conection to the internet</div>ˋ;
-        return;
-      }
-      const currentUser = getCurrentUser();
-      const currentUsername = currentUser ? currentUser.username : null;
-      let html= '';
-      rangliste.forEach((user, index) =>{
-       const rank = index +1;
-       const isCurrentUser = user.username === currentUsername;
-       const userClass = isCurrentUser ? 'rank-item current user': 'rank-item'
-       html += 
-         ˋ <div class="${userClass}">
-         <span class="rank-number">${rank}</span>
-         <span class="rank-username">${user.username} ${isCurrentUser ? ' (you)': ''}</span>
-         <span class="rank-trophies">${user.trophies}</span>
-         </div>
-         ˋ;
-      });
-    rankContainer.innerHTML = html;
-    }catch (error){
-       console.error('Error:', error);
-       rankContainer.innerHTML = ˋ<div class="error">Please check your internet conection</div>ˋ;
-    }
     
-  }
-  loadTop100();
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+
+    <script type="module">
+        import { getTrophiesRangliste, getCurrentUser } from '../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+        
+        const rankContainer = document.getElementById('rankContainer');
+        
+        async function loadTop100() {
+            try {
+                const rangliste = await getTrophiesRangliste();
+                
+                if (!rangliste || rangliste.length === 0) {
+                    // ✅ Korrigiert: no-players (ohne doppeltes 'r')
+                    rankContainer.innerHTML = `<div class="no-players">No players yet. Be the first!</div>`;
+                    return;
+                }
+                
+                const currentUser = getCurrentUser();
+                const currentUsername = currentUser ? currentUser.username : null;
+                let html = '';
+                
+                rangliste.forEach((user, index) => {
+                    const rank = index + 1;
+                    const isCurrentUser = user.username === currentUsername;
+                    // ✅ Korrigiert: current-user (mit Bindestrich)
+                    const userClass = isCurrentUser ? 'rank-item current-user' : 'rank-item';
+                    
+                    html += `
+                        <div class="${userClass}">
+                            <span class="rank-number">#${rank}</span>
+                            <span class="rank-username">${user.username} ${isCurrentUser ? ' (you)' : ''}</span>
+                            <span class="rank-trophies">${user.trophies}</span>
+                        </div>
+                    `;
+                });
+                
+                rankContainer.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                // ✅ Korrigiert: connection (mit 'n')
+                rankContainer.innerHTML = `<div class="error">Please check your internet connection</div>`;
+            }
+        }
+        
+        loadTop100();
+    </script>
 </body>
 </html>
