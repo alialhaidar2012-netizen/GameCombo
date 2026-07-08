@@ -57,28 +57,14 @@
 <script>eruda.init();</script>
 
 <script type="module">
-  // --- FANGER FÜR FEHLER MIT ZEILE ---
-  window.addEventListener('error', function(e) {
-    console.error('FEHLER ABGEFANGEN:', e.message);
-    console.error('Datei:', e.filename);
-    console.error('Zeile:', e.lineno);
-    console.error('Spalte:', e.colno);
-    // Optional: Stack Trace ausgeben
-    if (e.error && e.error.stack) {
-        console.error('Stack:', e.error.stack);
-    }
-    e.preventDefault(); // Verhindert, dass der Fehler die App sofort abstürzen lässt
-  });
 
   import {
      spielBeenden,
      getTrophiesforLevel
   } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
   
-  // ... (Rest deines Codes)
-
     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedCat") !== "true") {
-        window.location.replace("Super_Cat_Tutorial.html");
+      window.location.replace("Super_Cat_Tutorial.html");
     }
    sessionStorage.clear();
    
