@@ -213,7 +213,7 @@
   async function loadTop100(){
     try{
       const rangliste = await getTrophiesRangliste();
-      if(!rangliste || rangliste === 0){
+      if(!rangliste || rangliste.length === 0){
         rankContainer.innerHTML = '<div class="no-playerrs">Please check your conection to the internet</div>'
         return;
       }
@@ -226,9 +226,9 @@
        const userClass = isCurrentUser ? 'rank-item current user': 'rank-item'
        html += 
          ˋ <div class="${userClass}">
-         <span class="rank-number">#${rank}</span>
-         <span class="rank-username">#${user.username} ${isCurrentUser ? ' (you)': ''}</span>
-         <span class="rank-trophies">#${user.trophies}</span>
+         <span class="rank-number">${rank}</span>
+         <span class="rank-username">${user.username} ${isCurrentUser ? ' (you)': ''}</span>
+         <span class="rank-trophies">${user.trophies}</span>
          </div>
          ˋ;
       });
