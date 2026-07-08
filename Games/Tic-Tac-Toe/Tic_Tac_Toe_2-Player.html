@@ -105,7 +105,7 @@ html, body {
   let zuege = 0;
   let gewonnen = false;
   let aktuellerSpieler = "O";
-  window.setze(kästchen) = function {
+  window.setze(kästchen) = function() {
      if (kästchen.innerText != "" || gewonnen) return;
      zuege++;
      document.getElementById("turn").innerText = "Player "+aktuellerSpieler+"'s turn";
