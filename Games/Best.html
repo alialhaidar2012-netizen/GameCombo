@@ -217,7 +217,7 @@
     try{
       const rangliste = await getTrophiesRangliste();
       if(!rangliste || rangliste.length === 0){
-        rankContainer.innerHTML = ˋ<div class="no-playerrs">Please check your conection to the internet</div>ˋ
+        rankContainer.innerHTML = ˋ<div class="no-playerrs">Please check your conection to the internet</div>ˋ;
         return;
       }
       const currentUser = getCurrentUser();
