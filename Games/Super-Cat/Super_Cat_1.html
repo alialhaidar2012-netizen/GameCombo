@@ -322,6 +322,7 @@ function Figur(x,y,breite,höhe,laufendeFigur,umgedrehteFigur) {
             this.downwardForce = welt.schwerkraft;
           }
       }
+ }
       this.applyMovement = function() {
         let nextX= this.x + this.speed;
         let nextY= this.y + this.downwardForce;
