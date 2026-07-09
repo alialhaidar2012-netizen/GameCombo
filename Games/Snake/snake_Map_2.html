@@ -19,9 +19,10 @@
     z-index: 3;
     text-align: center;
 }
+
 .buttons {
-    height: 15vmin;
     width: 15vmin;
+    height: 15vmin;
     border: 3px solid black;
     background-color: yellow;
     color: black;
@@ -35,35 +36,70 @@
     user-select: none;
     -webkit-user-select: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
 }
+
+.buttons:active {
+    transform: scale(0.92);
+    background-color: #ffd700;
+}
+
 #Oben { left: 5vmin; bottom: 20vmin; }
 #Unten { left: 5vmin; bottom: 4vmin; }
 #Links { right: 20vmin; bottom: 12vmin; }
 #Rechts { right: 4vmin; bottom: 12vmin; }
 
-@media (max-width: 500px) {
+/* ===== KLEINE BILDSCHIRME ===== */
+@media (max-width: 600px) {
     .buttons {
-        width: 18vmin;
-        height: 18vmin;
+        width: 17vmin;
+        height: 17vmin;
+        font-size: 6.5vmin;
+        border-width: 3px;
+    }
+    #Oben { left: 4vmin; bottom: 21vmin; }
+    #Unten { left: 4vmin; bottom: 3vmin; }
+    #Links { right: 21vmin; bottom: 12vmin; }
+    #Rechts { right: 3vmin; bottom: 12vmin; }
+}
+
+@media (max-width: 480px) {
+    .buttons {
+        width: 20vmin;
+        height: 20vmin;
         font-size: 7vmin;
         border-width: 4px;
     }
-    #Oben { left: 4vmin; bottom: 22vmin; }
+    #Oben { left: 4vmin; bottom: 24vmin; }
     #Unten { left: 4vmin; bottom: 3vmin; }
-    #Links { right: 22vmin; bottom: 12vmin; }
+    #Links { right: 24vmin; bottom: 12vmin; }
     #Rechts { right: 3vmin; bottom: 12vmin; }
 }
 
 @media (max-width: 400px) {
     .buttons {
-        width: 45vmin;
-        height: 45vmin;
+        width: 25vmin;
+        height: 25vmin;
         font-size: 8vmin;
+        border-width: 4px;
     }
-    #Oben { left: 3vmin; bottom: 24vmin; }
+    #Oben { left: 3vmin; bottom: 26vmin; }
     #Unten { left: 3vmin; bottom: 3vmin; }
-    #Links { right: 24vmin; bottom: 12vmin; }
+    #Links { right: 26vmin; bottom: 12vmin; }
     #Rechts { right: 3vmin; bottom: 12vmin; }
+}
+
+@media (max-width: 350px) {
+    .buttons {
+        width: 30vmin;
+        height: 30vmin;
+        font-size: 9vmin;
+        border-width: 5px;
+    }
+    #Oben { left: 2vmin; bottom: 28vmin; }
+    #Unten { left: 2vmin; bottom: 2vmin; }
+    #Links { right: 28vmin; bottom: 12vmin; }
+    #Rechts { right: 2vmin; bottom: 12vmin; }
 }
     </style>
 </head>
