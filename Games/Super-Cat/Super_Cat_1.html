@@ -133,15 +133,12 @@ connect: function(keyInfo){
      }
    },
     sounds: {
-        aktiviert: true,
         springe: function(){
              new Audio("sounds/meow.wav").play();
         },
         hintergrundmusik: function() {
-             if (this.aktiviert) {
                  new Audio("sounds/background.mp3").play();
              }
-        }  
     },
     schleife: function(){
       if (this.beendet){
