@@ -4,6 +4,21 @@
   <title>snake-Map2</title>
       <link rel="manifest" href="../../manifest.json" />
     <style>
+#points {
+    position: fixed;
+    top: 2vmin;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4vmin;
+    font-weight: bold;
+    color: black;
+    background-color: yellow;
+    padding: 1vmin 3vmin;
+    border: 3px solid black;
+    border-radius: 2vmin;
+    z-index: 3;
+    text-align: center;
+}
 .buttons {
     width: 15vmin;
     height: 15vmin;
@@ -26,7 +41,6 @@
 #Links { right: 20vmin; bottom: 12vmin; }
 #Rechts { right: 4vmin; bottom: 12vmin; }
 
-/* Extra große Buttons für sehr kleine Bildschirme */
 @media (max-width: 500px) {
     .buttons {
         width: 18vmin;
@@ -42,8 +56,8 @@
 
 @media (max-width: 400px) {
     .buttons {
-        width: 20vmin;
-        height: 20vmin;
+        width: 25vmin;
+        height: 25vmin;
         font-size: 8vmin;
     }
     #Oben { left: 3vmin; bottom: 24vmin; }
@@ -98,15 +112,15 @@ var spiel = {
     punkte: 0,
     spielfeld: [
 "###############",
-"#             #",
-"#             #",
-"#      #      #",
-"#      #      #",
-"#             #",
-"#      #      #",
-"#      #      #",
-"#      #      #",
-"#      #      #",
+"#    #        #",
+"#    #        #",
+"#    #        #",
+"#    #        #",
+"#    #    #   #",
+"#         #   #",
+"#         #   #",
+"#         #   #",
+"#         #   #",
 "###############"
     ],  
 früchte:[
