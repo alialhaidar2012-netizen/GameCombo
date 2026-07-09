@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+  <html lang="de">
+    <head lang="de">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Super Cat</title>
+      <link rel="manifest" href="../../manifest.json" />
+  <style>
+  *{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+  html, body{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: lightgray;
+  }
+  #canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+.buttons {
+    width: 12vmin;
+    height: 12vmin;
+    border: 2px solid black;
+    background-color: yellow;
+    color: black;
+    position: fixed;
+    z-index: 2;
+    font-size: 5vmin;
+    font-weight: bold;
+    border-radius: 2vmin;
+    bottom: 5vmin;            /* Abstand von unten */
+}
+
+#Oben {
+    left: 5vmin;              /* Links unten */
+}
+#Links {
+    right: 17vmin;            /* Rechts unten – etwas nach links versetzt */
+}
+#Rechts {
+    right: 3vmin;             /* Rechts unten – ganz rechts */
+}
+  </style>  
+   </head>
+   <body>
+
+<canvas id="Spiel" width=640 height=480></canvas>
+<button id="Oben" class="buttons">W</button>
+<button id="Links" class="buttons">A</button>
+<button id="Rechts" class="buttons">D</button>
+    
+   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+import {
+   spielBeenden,
+   getTrophiesforLevel
+} from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+
+if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedCat") !== "true") {
+  window.location.replace("Super_Cat_Tutorial.html");
+}
+sessionStorage.clear();
+
+const canvas = document.getElementById("Spiel");
+let ctx = canvas.getContext("2d");
+
+// Touch-Steuerung
+document.getElementById("Oben").addEventListener("touchstart", function() {
+  spiel.steuerung.hoch = true;
+}, false);
+document.getElementById("Oben").addEventListener("touchend", function() {
+  spiel.steuerung.hoch = false;
+}, false);
+
+document.getElementById("Links").addEventListener("touchstart", function() {
+  spiel.steuerung.links = true;
+}, false);
+document.getElementById("Links").addEventListener("touchend", function() {
+  spiel.steuerung.links = false;
+}, false);
+
+document.getElementById("Rechts").addEventListener("touchstart", function() {
+  spiel.steuerung.rechts = true;
+}, false);
+document.getElementById("Rechts").addEventListener("touchend", function() {
+  spiel.steuerung.rechts = false;
+}, false);
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+let spiel = {
+    timer: null,
+    beendet: false,
+    steuerung: {
+      hoch: false,
+      runter: false,
+      links: false,
+      rechts: false,
+      mapping: {
+         65: "links",
+         68: "rechts",
+         87: "hoch",
+         83: "runter"
+      },
+      buttonPress: function(keyInfo){
+        if(this.mapping[keyInfo.keyCode]) {
+          this[this.mapping[keyInfo.keyCode]] = true;
+          spiel.sounds.hintergrundmusik();
+        }
+      },
+      buttonRelease: function(keyInfo){
+        if(this.mapping[keyInfo.keyCode]) {
+          this[this.mapping[keyInfo.keyCode]] = false;
+        }
+      },
+      connect: function(){
+        // FEHLER BEHOBEN: 'e' (Event) wird jetzt korrekt an die Funktionen übergeben
+        window.addEventListener("keydown", function(e){
+           spiel.steuerung.buttonPress(e);
+        }, false);
+        window.addEventListener("keyup", function(e){
+           spiel.steuerung.buttonRelease(e);
+        }, false);
+      }
+    },
+    sounds: {
+        springe: function(){
+             new Audio("sounds/meow.wav").play();
+        },
+        // FEHLER BEHOBEN: Platzhalter eingefügt, damit das Spiel bei Tastendruck nicht abstürzt
+        hintergrundmusik: function() {
+             // Hier optional Musik-Logik einfügen
+        }
+    },
+    schleife: function(){
+      if (this.beendet){
+          return;
+      }
+      let scaleX = canvas.width / welt.breite;
+      let scaleY = canvas.height / welt.höhe;
+      ctx.save();
+      ctx.scale(scaleX, scaleY);
+      welt.tick();
+      welt.zeichne();
+      spieler.tick();
+      spieler.zeichne();
+      ctx.restore();
+      this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
+    },
+    start: function(){
+      this.steuerung.connect();
+      this.schleife();
+    	},
+    stopp: async function(grund){
+       this.beendet = true;
+       window.clearTimeout(this.timer);
+       let gewonnen = (grund === "gewonnen");
+       let level = 1;
+       const regeln = await getTrophiesforLevel("Super_Cat", level);
+       if(gewonnen){
+         await spielBeenden("Super_Cat", level, true);
+         localStorage.setItem("Victory", "true");
+         localStorage.setItem("Trophies", regeln.sieg);
+         window.location.replace("../Victory.html");
+       } else {
+         await spielBeenden("Super_Cat", level, false);
+         localStorage.setItem("Victory", "false");
+         localStorage.setItem("Trophies", -regeln.verlust);
+         window.location.replace("../GameOver.html");
+       }
+    }
+};
+
+let welt = {
+    höhe: 480,
+    breite: 640,
+    schwerkraft: 10,
+    strecke: 0,
+    level: null,
+    kollisionskarte: null,
+    tickZähler: 0,
+    feinde: [],
+    ladeLevel: function() {
+       this.level = new Image();
+       this.level.src = "level.png";
+       
+       let kollisionskarteBild = new Image();
+       kollisionskarteBild.onload = function() {
+          let verborgenesCanvas = document.createElement("CANVAS");
+          // FEHLER BEHOBEN: Nutzt die Bildgröße des geladenen Bildes
+          verborgenesCanvas.width = this.width;
+          verborgenesCanvas.height = this.height;
+          welt.kollisionskarte = verborgenesCanvas.getContext("2d");
+          welt.kollisionskarte.drawImage(this, 0, 0);
+          console.log("Kollisionskarte geladen: " + this.width + "x" + this.height);
+       };
+       kollisionskarteBild.src = "data:image/png;base64,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";
+    },
+    
+    istFesteOberfläche: function(x, y){
+       return this.pixeltyp(x, y) == "#";
+    },
+    pixeltyp: function(x, y) {
+       if(!this.kollisionskarte){
+          return ".";
+       }
+       // Grenzprüfung, um Fehler außerhalb des Canvas zu vermeiden
+       if (x < 0 || x >= this.kollisionskarte.canvas.width || y < 0 || y >= this.kollisionskarte.canvas.height) {
+          return ".";
+       }
+       let rohdaten = this.kollisionskarte.getImageData(x, y, 1, 1).data;
+       let maske = rohdaten[0] + " " + rohdaten[1] + " " + rohdaten[2] + " " + rohdaten[3];
+                                                 
+       if(maske == "255 0 0 255") return "Grube";
+       if(maske == "76 255 0 255") return "Ausgang";
+       if(maske == "255 255 255 255") return ".";
+       if(maske == "0 0 0 255") return "#";
+       return ".";
+    },
+    tick: function() {
+       if (!this.level){
+         this.ladeLevel();
+         this.feinde.push(new Feind(500, 100));
+         this.feinde.push(new Feind(2000, 100));
+         this.feinde.push(new Feind(3700, 100));
+         this.feinde.push(new Feind(4000, 100));
+         this.feinde.push(new Feind(5600, 100));
+         this.feinde.push(new Feind(6500, 100));
+         this.feinde.push(new Feind(7600, 100));
+       }
+       this.strecke += spieler.figur.speed;
+       this.tickZähler++;
+       this.aktiviereFeinde();
+    },
+    aktiviereFeinde: function() {
+       for(var i = 0; i < this.feinde.length; i++){
+         this.feinde[i].tick();
+       }
+    },
+    levelEndOffset: function() {
+        return this.level ? (this.level.width - this.breite) : 0;
+    },
+    atLevelEnd: function() {
+      return this.strecke >= this.levelEndOffset();
+    },
+    zeichne: function() {
+        if (!this.level) return;
+        let zeichneBeiX = this.strecke * -1;
+        zeichneBeiX = zeichneBeiX > 0 ? 0 : zeichneBeiX;
+        zeichneBeiX = this.atLevelEnd() ? this.levelEndOffset() * -1 : zeichneBeiX;
+        ctx.drawImage(this.level, zeichneBeiX, 0);
+        for (var i = 0; i < this.feinde.length; i++){
+          this.feinde[i].zeichne();
+        }
+    }
+};
+
+let spieler = {
+    figur: new Figur(
+          160, 390, 25, 25,
+          new Animation("Graphiken/cat", 5),
+          new Animation("Graphiken/cat.backwards", 5)
+          ),
+    tick: function() {
+      let currentLocation = welt.pixeltyp(this.figur.leadingEdge(), this.figur.y);
+      if (currentLocation == "Ausgang" || currentLocation == "Grube"){
+          let state = currentLocation == "Ausgang" ? "gewonnen" : "verloren";
+          spiel.stopp(state);
+          return;
+      }
+      this.verarbeiteSteuerung();
+      this.figur.tick();
+    },
+    verarbeiteSteuerung: function() {
+       if (spiel.steuerung.rechts){
+         this.figur.speed = 5;
+       }
+       if (spiel.steuerung.links){
+         this.figur.speed = -5;
+       }
+       if (!spiel.steuerung.links && !spiel.steuerung.rechts){
+         this.figur.speed = 0;
+       }
+       if (spiel.steuerung.hoch && this.figur.standingOnAPlatform()){
+         this.figur.downwardForce = -8;
+         spiel.sounds.springe();
+         spiel.sounds.hintergrundmusik();
+       }
+    },
+    zeichne: function() { 
+      this.figur.zeichne(); 
+    }
+};
+
+function Figur(x, y, breite, höhe, laufendeFigur, umgedrehteFigur) {
+      this.x = x;
+      this.y = y;
+      this.höhe = höhe;
+      this.breite = breite;
+      this.speed = 0;
+      this.downwardForce = 0;
+      this.jumpHeight = 0;
+      this.laufendeFigur = laufendeFigur;
+      this.laufendeFigurReversed = umgedrehteFigur;
+      
+      this.tick = function(){
+          this.applyGravity();
+          this.applyMovement();
+      }
+      this.applyGravity = function() {
+        if (this.isJumping()) {
+          this.jumpHeight += (this.downwardForce * -1)
+          if (this.jumpHeight >= this.höhe * 6){
+             this.downwardForce = welt.schwerkraft;
+             this.jumpHeight = 0;
+          }
+         } else {
+          if (this.standingOnAPlatform()){
+            this.downwardForce = 0;
+          } else {
+            this.downwardForce = welt.schwerkraft;
+          }
+        }
+      }
+      this.applyMovement = function() {
+        let nextX = this.x + this.speed;
+        let nextY = this.y + this.downwardForce;
+        if (nextX < 0){
+         this.x = 0;
+         spiel.stopp("verloren");
+         return;
+        }
+        let nextLeadingX = this.leadingEdge() + this.speed;
+        let walkingIntoSurface = welt.istFesteOberfläche(nextLeadingX, this.y);
+        if (this.isMoving() && walkingIntoSurface) {
+           nextX = this.x;
+           this.speed = 0;
+        }
+        let topLeftIsSolid = welt.istFesteOberfläche(this.leadingEdge(), this.y);
+        let topRightIsSolid = welt.istFesteOberfläche(this.trailingEdge(), this.y);
+        if ((topLeftIsSolid || topRightIsSolid) && this.isJumping()){
+          this.downwardForce = welt.schwerkraft;
+          this.jumpHeight = 0;
+        }
+        this.x = nextX;
+        this.y = nextY;
+      }
+      this.bottom = function() {
+         return this.y + this.höhe;
+      }
+      this.isJumping = function() {
+        return this.downwardForce < 0;
+      }
+      this.isFalling = function() {
+         return this.downwardForce > 0;
+      }
+      this.isMoving = function() {
+        return this.speed != 0;
+      } 
+      this.leadingEdge = function(){
+        return this.speed < 0 ? this.x : this.x + this.breite;
+      }
+      this.trailingEdge = function() {
+        return this.speed < 0 ? this.x + this.breite : this.x;
+      }
+      this.standingOnAPlatform = function() {
+        return welt.istFesteOberfläche(this.leadingEdge(), this.bottom() + 1) ||
+               welt.istFesteOberfläche(this.trailingEdge(), this.bottom() + 1);
+      }
+      this.zeichne = function() {
+        if (!this.laufendeFigur || !welt.level) {
+           return;
+        }
+        let zeichneBeiX = this.x - welt.strecke;
+        zeichneBeiX = zeichneBeiX > this.x ? this.x : zeichneBeiX;
+        if (welt.atLevelEnd()) {
+          zeichneBeiX = (welt.breite - (welt.level.width - welt.strecke - (this.x - welt.strecke)));
+        }
+        let sprite = this.speed < 0 ? this.laufendeFigurReversed : this.laufendeFigur;
+        if (this.isJumping() || this.isFalling()) {
+          sprite.drawFrame(4, zeichneBeiX, this.y, this.höhe, this.breite);
+        } else if(this.isMoving()){
+          sprite.zeichne(welt.tickZähler, zeichneBeiX, this.y, this.höhe, this.breite);
+        } else {
+          sprite.drawFrame(1, zeichneBeiX, this.y, this.höhe, this.breite);
+        }
+     }
+     this.kollidiertMit = function(other) {
+       if (this.x >= other.x &&
+           this.x <= other.x + other.breite &&
+           this.y >= other.y &&
+           this.y <= other.y + other.höhe) {
+           return true;
+          }
+          return false;
+        }
+}
+      
+function Animation(dateiname, frameZahl) {
+    this.frames = [];
+    this.currentFrameId = 1;
+    for (var frameId = 1; frameId <= frameZahl; frameId++) {
+       let frame = new Image();
+       frame.src = dateiname + "." + frameId + ".png";
+       this.frames[frameId] = frame;
+    }
+    this.zeichne = function(tickZähler, x, y, höhe, breite){
+       if (tickZähler % 5 == 0) {
+         this.currentFrameId++;
+       }
+       this.currentFrameId = this.currentFrameId >= this.frames.length ? 1 : this.currentFrameId;
+       this.drawFrame(this.currentFrameId, x, y, höhe, breite);
+    }
+    this.drawFrame = function(frameNumber, x, y, höhe, breite){
+       if(this.frames[frameNumber]) {
+         ctx.drawImage(this.frames[frameNumber], x, y, breite, höhe);
+       }
+    }
+}
+
+function Feind(x, y) {
+    this.figur = new Figur(x, y, 25, 25,
+    new Animation("Graphiken/tiger", 5),
+    new Animation("Graphiken/tiger.backwards", 5))
+    this.tick = function() {
+       let distanceFromPlayer = Math.abs(spieler.figur.x - this.figur.x);
+       if (distanceFromPlayer <= welt.breite * 2) {
+         this.figur.speed = 2;
+         if (spieler.figur.x < this.figur.x) {
+           this.figur.speed *= -1;
+         }
+         if (this.figur.kollidiertMit(spieler.figur)) {
+           spiel.stopp("verloren");
+         }
+         this.figur.tick();
+       }
+    }
+    this.zeichne = function() {
+       this.figur.zeichne(); 
+    }
+}
+
+spiel.start();        
+
+
+</body>
+</html>
