@@ -131,7 +131,7 @@ connect: function(keyInfo){
        spiel.steuerung.buttonRelease(event);
        }, false);
      }
-   }, 
+   },
     sounds: {
         aktiviert: true,
         springe: function(){
@@ -321,7 +321,6 @@ function Figur(x,y,breite,höhe,laufendeFigur,umgedrehteFigur) {
           }else{
             this.downwardForce = welt.schwerkraft;
           }
-        }
       }
       this.applyMovement = function() {
         let nextX= this.x + this.speed;
