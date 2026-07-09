@@ -67,14 +67,12 @@
       window.location.replace("Super_Cat_Tutorial.html");
     }
    sessionStorage.clear();
-   
+  
 const canvas=document.getElementById("Spiel");
 let ctx=canvas.getContext("2d");
-let aktiviert = false;
-let Oben = document.getElementById("Oben").addEventListener("touchstart", function setOben(){
+
+  let Oben = document.getElementById("Oben").addEventListener("touchstart", function setOben(){
   spiel.steuerung.hoch = true;
-     aktiviert = true;
-  
   spiel.sounds.hintergrundmusik();
 }, false);
 document.getElementById("Oben").addEventListener("touchend", function setOben() {
@@ -83,8 +81,6 @@ document.getElementById("Oben").addEventListener("touchend", function setOben() 
 
 let Links = document.getElementById("Links").addEventListener("touchstart", function setLinks() {
   spiel.steuerung.links = true;
-     aktiviert = true;
-  
   spiel.sounds.hintergrundmusik();
 }, false);
 document.getElementById("Links").addEventListener("touchend", function setLinks() {
@@ -93,8 +89,6 @@ document.getElementById("Links").addEventListener("touchend", function setLinks(
 
 let Rechts = document.getElementById("Rechts").addEventListener("touchstart", function setRechts() {
   spiel.steuerung.rechts = true;
-     aktiviert = true;
-  
   spiel.sounds.hintergrundmusik();
 }, false);
 document.getElementById("Rechts").addEventListener("touchend", function setRechts() {
@@ -124,7 +118,6 @@ let spiel = {
     },
 buttonPress: function(keyInfo){
     this[this.mapping[keyInfo.keyCode]]= true;
-     aktiviert = true;
     spiel.sounds.hintergrundmusik();
    },
 buttonRelease: function(keyInfo){
@@ -133,7 +126,6 @@ buttonRelease: function(keyInfo){
 connect: function(keyInfo){
     window.addEventListener("keydown", function(keyInfo){
        spiel.steuerung.buttonPress(event);
-       aktiviert = true;
        }, false);
     window.addEventListener("keyup", function(keyInfo){
        spiel.steuerung.buttonRelease(event);
