@@ -73,7 +73,6 @@ let ctx=canvas.getContext("2d");
 
   let Oben = document.getElementById("Oben").addEventListener("touchstart", function setOben(){
   spiel.steuerung.hoch = true;
-  spiel.sounds.hintergrundmusik();
 }, false);
 document.getElementById("Oben").addEventListener("touchend", function setOben() {
   spiel.steuerung.hoch = false;
@@ -81,7 +80,6 @@ document.getElementById("Oben").addEventListener("touchend", function setOben() 
 
 let Links = document.getElementById("Links").addEventListener("touchstart", function setLinks() {
   spiel.steuerung.links = true;
-  spiel.sounds.hintergrundmusik();
 }, false);
 document.getElementById("Links").addEventListener("touchend", function setLinks() {
   spiel.steuerung.links = false;
@@ -89,7 +87,6 @@ document.getElementById("Links").addEventListener("touchend", function setLinks(
 
 let Rechts = document.getElementById("Rechts").addEventListener("touchstart", function setRechts() {
   spiel.steuerung.rechts = true;
-  spiel.sounds.hintergrundmusik();
 }, false);
 document.getElementById("Rechts").addEventListener("touchend", function setRechts() {
   spiel.steuerung.rechts = false;
@@ -135,10 +132,7 @@ connect: function(keyInfo){
     sounds: {
         springe: function(){
              new Audio("sounds/meow.wav").play();
-        },
-        hintergrundmusik: function() {
-                 new Audio("sounds/background.mp3").play();
-             }
+        }
     },
     schleife: function(){
       if (this.beendet){
