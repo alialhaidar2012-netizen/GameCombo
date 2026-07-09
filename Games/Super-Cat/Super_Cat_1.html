@@ -62,7 +62,7 @@
      spielBeenden,
      getTrophiesforLevel
   } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
-  
+
     if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedCat") !== "true") {
       window.location.replace("Super_Cat_Tutorial.html");
     }
@@ -70,7 +70,7 @@
    
 const canvas=document.getElementById("Spiel");
 let ctx=canvas.getContext("2d");
-
+let aktiviert = false;
 let Oben = document.getElementById("Oben").addEventListener("touchstart", function setOben(){
   spiel.steuerung.hoch = true;
      aktiviert = true;
@@ -111,7 +111,6 @@ resizeCanvas();
 let spiel = {
     timer: null,
     beendet: false,
-    aktiviert: false,
     steuerung: {
       hoch: false,
       runter: false,
