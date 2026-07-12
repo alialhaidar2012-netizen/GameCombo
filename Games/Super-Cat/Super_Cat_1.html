@@ -144,8 +144,10 @@ connect: function(keyInfo){
   ctx.scale(scaleX, scaleY);
       welt.tick();
       welt.zeichne();
+  if(welt.levelBereit){
       spieler.tick();
       spieler.zeichne();
+  }
 ctx.restore();
 this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
     },
