@@ -265,7 +265,7 @@ async function meineStatistiken() {
 
 function getTrophiesforLevel(spielName, level) {
   const levelData = {
-    "snake": { 1: { sieg: 3, verlust: 1 }, 2: { sieg: 4, verlust: 2 }, 3: { sieg: 5, verlust: 3 } },
+    "snake": { 1: { sieg: 3, verlust: 1 }, 2: { sieg: 4, verlust: 1 }, 3: { sieg: 5, verlust: 1 } },
     "Super_Cat": { 1: { sieg: 5, verlust: 1 } },
     "TTT_Ki": { 1: { sieg: 3, verlust: 1 } },
     "TTT_2P": { 1: { sieg: 3, verlust: 1 } },
