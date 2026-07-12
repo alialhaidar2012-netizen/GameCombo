@@ -200,6 +200,7 @@ verborgenesCanvas.getContext("2d")
        },
     
     istFesteOberfläche: function(x, y){
+       console.log("Es wurde feste Oberfläche erkannt");
        return this.pixeltyp(x, y) == "#";
     },
     pixeltyp: function(x,y) {
@@ -309,6 +310,7 @@ function Figur(x,y,breite,höhe,laufendeFigur,umgedrehteFigur) {
           }
          }else{
           if (this.standingOnAPlatform()){
+            console.log("Es wird erkannt das man auf der Platform steht");
             this.downwardForce = 0;
           }else{
             this.downwardForce = welt.schwerkraft;
