@@ -189,7 +189,7 @@
         window.clearTimeout(this.timer);
         let gewonnen = (grund === "gewonnen");
         let level = 1;
-        const regeln = await getTrophiesforLevel("Super_Cat", level);
+        const regeln = getTrophiesforLevel("Super_Cat", level);
         if (gewonnen) {
           const result = await spielBeenden("Super_Cat", level, true);
           localStorage.setItem("Victory", "true");
