@@ -158,7 +158,7 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
        window.clearTimeout(this.timer);
     let gewonnen = (grund === "gewonnen");
     let level = 1;
-    const regeln = await getTrophiesforLevel("Super_Cat", level);
+    const regeln = getTrophiesforLevel("Super_Cat", level);
 if(gewonnen){
   const result = await spielBeenden("Super_Cat", level, true);
   localStorage.setItem("Victory", "true");
@@ -432,4 +432,4 @@ function Figur(x,y,breite,höhe,laufendeFigur,umgedrehteFigur) {
        spiel.start();        
 </script> 
 </body>
-</html> bitte debuggen
+</html>
