@@ -1,14 +1,73 @@
 <!DOCTYPE html>
 <html>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <head lang="de">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Super Cat</title>
+      <link rel="manifest" href="../../manifest.json" />
+  <style>
+  *{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+  html, body{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: lightgray;
+  }
+  #canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+.buttons {
+    width: 12vmin;
+    height: 12vmin;
+    border: 2px solid black;
+    background-color: yellow;
+    color: black;
+    position: fixed;
+    z-index: 2;
+    font-size: 5vmin;
+    font-weight: bold;
+    border-radius: 2vmin;
+    bottom: 5vmin;            /* Abstand von unten */
+}
 
-<head lang="de">
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-   <title>Super Scratch</title>
-</head>
+#Oben {
+    left: 5vmin;              /* Links unten */
+}
+#Links {
+    right: 17vmin;            /* Rechts unten – etwas nach links versetzt */
+}
+#Rechts {
+    right: 3vmin;             /* Rechts unten – ganz rechts */
+}
+  </style>  
+   </head>
 
 <body>
+   
+<canvas id="Spiel" width=640 height=480></canvas>
+<button id="Oben" class="buttons">W</button>
+<button id="Links" class="buttons">A</button>
+<button id="Rechts" class="buttons">D</button>
   <canvas id="Spiel" width="640" height="480"></canvas>
-  <script type="text/javascript">
+   
+  <script type="module">
+     
+  import {
+     spielBeenden,
+     getTrophiesforLevel
+  } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+
+    if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedCat") !== "true") {
+      window.location.replace("Super_Cat_Tutorial.html");
+    }
+   sessionStorage.clear();
+     
     var canvas = document.getElementById("Spiel");
     var ctx = canvas.getContext("2d");
     var spiel = {
@@ -53,26 +112,47 @@
             }
         },
        },
-      schleife: function() {
-        if (this.beendet) {
+    schleife: function(){
+      if (this.beendet){
           return;
-        }
-        welt.tick();
-        spieler.tick();
-        welt.zeichne();
-        spieler.zeichne();
+      }
+  let scaleX = canvas.width / welt.breite;
+  let scaleY = canvas.height / welt.höhe;
+  ctx.save();
+  ctx.scale(scaleX, scaleY);
+      welt.tick();
+      welt.zeichne();
+  if(welt.levelBereit){
+      spieler.tick();
+      spieler.zeichne();
+  }
+ctx.restore();
         this.timer = window.setTimeout("spiel.schleife()", 1000 / 60);
       },
       start: function() {
         this.steuerung.connect();
         this.schleife();
       },
-      stopp: function(grund) {
-        this.beendet = true;
-        window.clearTimeout(this.timer);
-        alert(grund == "gewonnen" ? "Du hast gewonnen!" : "Du hast verloren!");
-      }
-    };
+    stopp: async function(grund){
+       this.beendet = true;
+       window.clearTimeout(this.timer);
+    let gewonnen = (grund === "gewonnen");
+    let level = 1;
+    const regeln = getTrophiesforLevel("Super_Cat", level);
+if(gewonnen){
+  const result = await spielBeenden("Super_Cat", level, true);
+  localStorage.setItem("Victory", "true");
+  localStorage.setItem("Trophies", regeln.sieg);
+  window.location.replace("../Victory.html");
+} else {
+  const result = await spielBeenden("Super_Cat", level, false);
+  localStorage.setItem("Victory", "false");
+  localStorage.setItem("Trophies", -regeln.verlust);
+  window.location.replace("../GameOver.html");
+       }
+    }
+};
+
     var welt = {
       höhe: 480,
       breite: 640,
