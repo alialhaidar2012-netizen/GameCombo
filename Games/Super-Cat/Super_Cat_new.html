@@ -55,7 +55,10 @@
 <button id="Links" class="buttons">A</button>
 <button id="Rechts" class="buttons">D</button>
   <canvas id="Spiel" width="640" height="480"></canvas>
-   
+
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+ 
   <script type="module">
      
   import {
@@ -70,6 +73,35 @@
      
     var canvas = document.getElementById("Spiel");
     var ctx = canvas.getContext("2d");
+
+     let Oben = document.getElementById("Oben").addEventListener("touchstart", function setOben(){
+  spiel.steuerung.hoch = true;
+}, false);
+document.getElementById("Oben").addEventListener("touchend", function setOben() {
+  spiel.steuerung.hoch = false;
+}, false);
+
+let Links = document.getElementById("Links").addEventListener("touchstart", function setLinks() {
+  spiel.steuerung.links = true;
+}, false);
+document.getElementById("Links").addEventListener("touchend", function setLinks() {
+  spiel.steuerung.links = false;
+}, false);
+
+let Rechts = document.getElementById("Rechts").addEventListener("touchstart", function setRechts() {
+  spiel.steuerung.rechts = true;
+}, false);
+document.getElementById("Rechts").addEventListener("touchend", function setRechts() {
+  spiel.steuerung.rechts = false;
+}, false);
+
+   function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
     var spiel = {
       timer: null,
       beendet: false,
@@ -122,10 +154,8 @@
   ctx.scale(scaleX, scaleY);
       welt.tick();
       welt.zeichne();
-  if(welt.levelBereit){
       spieler.tick();
       spieler.zeichne();
-  }
 ctx.restore();
         this.timer = window.setTimeout("spiel.schleife()", 1000 / 60);
       },
