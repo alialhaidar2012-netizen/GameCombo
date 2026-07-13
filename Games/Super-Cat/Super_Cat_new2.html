@@ -169,79 +169,84 @@
             }
         };
 
-        var welt = {
-            höhe: 480,
-            breite: 640,
-            schwerkraft: 10,
-            strecke: 0,
-            level: null,
-            kollisionskarte: null,
-            tickZähler: 0,
-            feinde: [],
-            ladeLevel: function() {
-                this.level = new Image();
-                this.level.src = "level.png";
-                var kollisionskarteBild = new Image();
-                kollisionskarteBild.onload = function(loadEvent) {
-                    var verborgenesCanvas = document.createElement("CANVAS");
-                    verborgenesCanvas.setAttribute("width", this.width);
-                    verborgenesCanvas.setAttribute("height", this.height);
-                    welt.kollisionskarte = verborgenesCanvas.getContext("2d");
-                    welt.kollisionskarte.drawImage(this, 0, 0);
-                    console.log("Kollisionskarte geladen: " + this.width + "x" + this.height);
-                };
-                kollisionskarteBild.src = "kollisionskarte.png";
-            },
-            istFesteOberfläche: function(x, y) {
-                return this.pixeltyp(x, y) == "#";
-            },
-            pixeltyp: function(x, y) {
-                if (!this.kollisionskarte) {
-                    return ".";
-                }
-                var rohdaten = this.kollisionskarte.getImageData(x, y, 1, 1).data;
-                var maske = rohdaten[0] + " " + rohdaten[1] + " " + rohdaten[2] + " " + rohdaten[3];
-                if (maske == "255 0 0 255") return "Grube";
-                if (maske == "76 255 0 255") return "Ausgang";
-                if (maske == "255 255 255 255") return ".";
-                if (maske == "0 0 0 255") return "#";
-            },
-            tick: function() {
-                if (!this.level) {
-                    this.ladeLevel();
-                    this.feinde.push(new Feind(500, 100));
-                    this.feinde.push(new Feind(2000, 100));
-                    this.feinde.push(new Feind(3700, 100));
-                    this.feinde.push(new Feind(4000, 100));
-                    this.feinde.push(new Feind(5600, 100));
-                    this.feinde.push(new Feind(6500, 100));
-                    this.feinde.push(new Feind(7600, 100));
-                }
-                this.strecke += spieler.figur.speed;
-                this.tickZähler++;
-                this.aktiviereFeinde();
-            },
-            aktiviereFeinde: function() {
-                for (var i = 0; i < this.feinde.length; i++) {
-                    this.feinde[i].tick();
-                }
-            },
-            levelEndOffset: function() {
-                return this.level.width - this.breite;
-            },
-            atLevelEnd: function() {
-                return this.strecke >= this.levelEndOffset();
-            },
-            zeichne: function() {
-                var zeichneBeiX = this.strecke * -1;
-                zeichneBeiX = zeichneBeiX > 0 ? 0 : zeichneBeiX;
-                zeichneBeiX = this.atLevelEnd() ? this.levelEndOffset() * -1 : zeichneBeiX;
-                ctx.drawImage(this.level, zeichneBeiX, 0);
-                for (var i = 0; i < this.feinde.length; i++) {
-                    this.feinde[i].zeichne();
-                }
-            }
+    var welt = {
+    höhe: 480,
+    breite: 640,
+    schwerkraft: 10,
+    strecke: 0,
+    level: null,
+    kollisionskarte: null,
+    tickZähler: 0,
+    feinde: [],
+    ladeLevel: function() {
+        this.level = new Image();
+        this.level.src = "level.png";
+        var kollisionskarteBild = new Image();
+        kollisionskarteBild.onload = function(loadEvent) {
+            var verborgenesCanvas = document.createElement("CANVAS");
+            verborgenesCanvas.setAttribute("width", this.width);
+            verborgenesCanvas.setAttribute("height", this.height);
+            welt.kollisionskarte = verborgenesCanvas.getContext("2d");
+            welt.kollisionskarte.drawImage(this, 0, 0);
+            console.log("Kollisionskarte geladen: " + this.width + "x" + this.height);
         };
+        kollisionskarteBild.src = "kollisionskarte.png";
+    },
+    istFesteOberfläche: function(x, y) {
+        return this.pixeltyp(x, y) == "#";
+    },
+    pixeltyp: function(x, y) {
+        if (!this.kollisionskarte) {
+            return ".";
+        }
+        // Sicherstellen, dass die Koordinaten im gültigen Bereich sind
+        if (x < 0 || y < 0 || x >= this.kollisionskarte.canvas.width || y >= this.kollisionskarte.canvas.height) {
+            return ".";
+        }
+        var rohdaten = this.kollisionskarte.getImageData(x, y, 1, 1).data;
+        var maske = rohdaten[0] + " " + rohdaten[1] + " " + rohdaten[2] + " " + rohdaten[3];
+        if (maske == "255 0 0 255") return "Grube";
+        if (maske == "76 255 0 255") return "Ausgang";
+        if (maske == "255 255 255 255") return ".";
+        if (maske == "0 0 0 255") return "#";
+        return ".";
+    },
+    tick: function() {
+        if (!this.level) {
+            this.ladeLevel();
+            this.feinde.push(new Feind(500, 100));
+            this.feinde.push(new Feind(2000, 100));
+            this.feinde.push(new Feind(3700, 100));
+            this.feinde.push(new Feind(4000, 100));
+            this.feinde.push(new Feind(5600, 100));
+            this.feinde.push(new Feind(6500, 100));
+            this.feinde.push(new Feind(7600, 100));
+        }
+        this.strecke += spieler.figur.speed;
+        this.tickZähler++;
+        this.aktiviereFeinde();
+    },
+    aktiviereFeinde: function() {
+        for (var i = 0; i < this.feinde.length; i++) {
+            this.feinde[i].tick();
+        }
+    },
+    levelEndOffset: function() {
+        return this.level.width - this.breite;
+    },
+    atLevelEnd: function() {
+        return this.strecke >= this.levelEndOffset();
+    },
+    zeichne: function() {
+        var zeichneBeiX = this.strecke * -1;
+        zeichneBeiX = zeichneBeiX > 0 ? 0 : zeichneBeiX;
+        zeichneBeiX = this.atLevelEnd() ? this.levelEndOffset() * -1 : zeichneBeiX;
+        ctx.drawImage(this.level, zeichneBeiX, 0);
+        for (var i = 0; i < this.feinde.length; i++) {
+            this.feinde[i].zeichne();
+        }
+    }
+};
 
         var spieler = {
             figur: new Figur(160, 390, 25, 25, new Animation("Graphiken/cat", 5), new Animation("Graphiken/cat.backwards", 5)),
