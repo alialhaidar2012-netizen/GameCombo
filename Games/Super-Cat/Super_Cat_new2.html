@@ -296,46 +296,76 @@
                 this.applyMovement();
             };
             
-            this.applyGravity = function() {
-                if (this.isJumping()) {
-                    this.jumpHeight += (this.downwardForce * -1);
-                    if (this.jumpHeight >= this.höhe * 6) {
-                        this.downwardForce = welt.schwerkraft;
-                        this.jumpHeight = 0;
-                    }
-                } else {
-                    if (this.standingOnAPlatform()) {
-                        this.downwardForce = 0;
-                    } else {
-                        this.downwardForce = welt.schwerkraft;
-                    }
-                }
-            };
-            
-            this.applyMovement = function() {
-                var nextX = this.x + this.speed;
-                var nextY = this.y + this.downwardForce;
-                if (nextX < 0) {
-                    this.x = 0;
-                    spiel.stopp("verloren");
-                    return;
-                }
-                var nextLeadingX = this.leadingEdge() + this.speed;
-                var walkingIntoSurface = welt.istFesteOberfläche(nextLeadingX, this.y);
-                if (this.isMoving() && walkingIntoSurface) {
-                    nextX = this.x;
-                    this.speed = 0;
-                }
-                var topLeftIsSolid = welt.istFesteOberfläche(this.leadingEdge(), this.y);
-                var topRightIsSolid = welt.istFesteOberfläche(this.trailingEdge(), this.y);
-                if ((topLeftIsSolid || topRightIsSolid) && this.isJumping()) {
-                    this.downwardForce = welt.schwerkraft;
-                    this.jumpHeight = 0;
-                }
-                this.x = nextX;
-                this.y = nextY;
-            };
-            
+ this.applyGravity = function() {
+    // WICHTIG: Zuerst prüfen ob auf Plattform
+    if (this.standingOnAPlatform()) {
+        // Wenn auf dem Boden und nicht am Springen
+        if (!this.isJumping()) {
+            this.downwardForce = 0;
+            this.jumpHeight = 0;
+        }
+    } else {
+        // Wenn in der Luft und nicht am Springen -> fallen
+        if (!this.isJumping()) {
+            this.downwardForce = welt.schwerkraft;
+        }
+    }
+    
+    // Sprung-Logik
+    if (this.isJumping()) {
+        this.jumpHeight += (this.downwardForce * -1);
+        if (this.jumpHeight >= this.höhe * 6) {
+            this.downwardForce = welt.schwerkraft;
+            this.jumpHeight = 0;
+        }
+    }
+};
+
+this.applyMovement = function() {
+    var nextX = this.x + this.speed;
+    var nextY = this.y + this.downwardForce;
+    
+    // Verhindern, dass Spieler links aus dem Bild läuft
+    if (nextX < 0) {
+        this.x = 0;
+        spiel.stopp("verloren");
+        return;
+    }
+    
+    // Horizontale Kollision
+    var nextLeadingX = this.leadingEdge() + this.speed;
+    var walkingIntoSurface = welt.istFesteOberfläche(nextLeadingX, this.y);
+    if (this.isMoving() && walkingIntoSurface) {
+        nextX = this.x;
+        this.speed = 0;
+    }
+    
+    // Kollision mit Decke (beim Springen)
+    var topLeftIsSolid = welt.istFesteOberfläche(this.leadingEdge(), nextY);
+    var topRightIsSolid = welt.istFesteOberfläche(this.trailingEdge(), nextY);
+    if ((topLeftIsSolid || topRightIsSolid) && this.isJumping()) {
+        this.downwardForce = welt.schwerkraft;
+        this.jumpHeight = 0;
+        nextY = this.y; // Nicht durch die Decke bewegen
+    }
+    
+    // Kollision mit Boden (beim Fallen) - DAS HAT GEFEHLT!
+    if (this.isFalling() || this.downwardForce > 0) {
+        var nextBottom = nextY + this.höhe;
+        var bottomLeftSolid = welt.istFesteOberfläche(this.leadingEdge(), nextBottom);
+        var bottomRightSolid = welt.istFesteOberfläche(this.trailingEdge(), nextBottom);
+        
+        if (bottomLeftSolid || bottomRightSolid) {
+            // Auf den Boden setzen
+            nextY = this.y; // Position beibehalten
+            this.downwardForce = 0;
+            this.jumpHeight = 0;
+        }
+    }
+    
+    this.x = nextX;
+    this.y = nextY;
+};
             this.bottom = function() {
                 return this.y + this.höhe;
             };
