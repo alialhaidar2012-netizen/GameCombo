@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head lang="de">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Super Cat</title>
+    <link rel="manifest" href="../../manifest.json" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: lightgray;
+        }
+        #Spiel {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .buttons {
+            width: 12vmin;
+            height: 12vmin;
+            border: 2px solid black;
+            background-color: yellow;
+            color: black;
+            position: fixed;
+            z-index: 2;
+            font-size: 5vmin;
+            font-weight: bold;
+            border-radius: 2vmin;
+            bottom: 5vmin;
+        }
+        #Oben {
+            left: 5vmin;
+        }
+        #Links {
+            right: 17vmin;
+        }
+        #Rechts {
+            right: 3vmin;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="Spiel" width="640" height="480"></canvas>
+    <button id="Oben" class="buttons">W</button>
+    <button id="Links" class="buttons">A</button>
+    <button id="Rechts" class="buttons">D</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+
+    <script type="module">
+        import {
+            spielBeenden,
+            getTrophiesforLevel
+        } from '../../Benutzerkonten_und_Ranglisten/Rangliste_und_Anmelden.js';
+
+        if (sessionStorage.getItem("skipTutorial") !== "true" && localStorage.getItem("tutorialSkippedCat") !== "true") {
+            window.location.replace("Super_Cat_Tutorial.html");
+        }
+        sessionStorage.clear();
+
+        var canvas = document.getElementById("Spiel");
+        var ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        var spiel = {
+            timer: null,
+            beendet: false,
+            steuerung: {
+                links: false,
+                rechts: false,
+                hoch: false,
+                runter: false,
+                mapping: {
+                    65: "links",
+                    68: "rechts",
+                    87: "hoch",
+                    83: "runter"
+                },
+                buttonPress: function(keyInfo) {
+                    this[this.mapping[keyInfo.keyCode]] = true;
+                    spiel.sounds.hintergrundmusik();
+                },
+                buttonRelease: function(keyInfo) {
+                    this[this.mapping[keyInfo.keyCode]] = false;
+                },
+                connect: function() {
+                    window.addEventListener("keydown", function(event) {
+                        spiel.steuerung.buttonPress(event);
+                    }, false);
+                    window.addEventListener("keyup", function(event) {
+                        spiel.steuerung.buttonRelease(event);
+                    }, false);
+                }
+            },
+            sounds: {
+                aktiviert: true,
+                springe: function() {
+                    try {
+                        new Audio("sounds/meow.wav").play();
+                    } catch(e) {
+                        console.log("Sound nicht verfügbar");
+                    }
+                },
+                hintergrundmusik: function() {
+                    if (this.aktiviert) {
+                        try {
+                            new Audio("sounds/background.mp3").play();
+                            this.aktiviert = false;
+                        } catch(e) {
+                            console.log("Hintergrundmusik nicht verfügbar");
+                        }
+                    }
+                }
+            },
+            schleife: function() {
+                if (this.beendet) {
+                    return;
+                }
+                let scaleX = canvas.width / welt.breite;
+                let scaleY = canvas.height / welt.höhe;
+                ctx.save();
+                ctx.scale(scaleX, scaleY);
+                welt.tick();
+                welt.zeichne();
+                spieler.tick();
+                spieler.zeichne();
+                ctx.restore();
+                this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000 / 60);
+            },
+            start: function() {
+                this.steuerung.connect();
+                this.schleife();
+            },
+            stopp: async function(grund) {
+                this.beendet = true;
+                window.clearTimeout(this.timer);
+                let gewonnen = (grund === "gewonnen");
+                let level = 1;
+                try {
+                    const regeln = getTrophiesforLevel("Super_Cat", level);
+                    if (gewonnen) {
+                        const result = await spielBeenden("Super_Cat", level, true);
+                        localStorage.setItem("Victory", "true");
+                        localStorage.setItem("Trophies", regeln.sieg);
+                        window.location.replace("../Victory.html");
+                    } else {
+                        const result = await spielBeenden("Super_Cat", level, false);
+                        localStorage.setItem("Victory", "false");
+                        localStorage.setItem("Trophies", -regeln.verlust);
+                        window.location.replace("../GameOver.html");
+                    }
+                } catch(e) {
+                    console.log("Fehler beim Beenden:", e);
+                }
+            }
+        };
+
+        var welt = {
+            höhe: 480,
+            breite: 640,
+            schwerkraft: 10,
+            strecke: 0,
+            level: null,
+            kollisionskarte: null,
+            tickZähler: 0,
+            feinde: [],
+            ladeLevel: function() {
+                this.level = new Image();
+                this.level.src = "level.png";
+                var kollisionskarteBild = new Image();
+                kollisionskarteBild.onload = function(loadEvent) {
+                    var verborgenesCanvas = document.createElement("CANVAS");
+                    verborgenesCanvas.setAttribute("width", this.width);
+                    verborgenesCanvas.setAttribute("height", this.height);
+                    welt.kollisionskarte = verborgenesCanvas.getContext("2d");
+                    welt.kollisionskarte.drawImage(this, 0, 0);
+                    console.log("Kollisionskarte geladen: " + this.width + "x" + this.height);
+                };
+                kollisionskarteBild.src = "kollisionskarte.png";
+            },
+            istFesteOberfläche: function(x, y) {
+                return this.pixeltyp(x, y) == "#";
+            },
+            pixeltyp: function(x, y) {
+                if (!this.kollisionskarte) {
+                    return ".";
+                }
+                var rohdaten = this.kollisionskarte.getImageData(x, y, 1, 1).data;
+                var maske = rohdaten[0] + " " + rohdaten[1] + " " + rohdaten[2] + " " + rohdaten[3];
+                if (maske == "255 0 0 255") return "Grube";
+                if (maske == "76 255 0 255") return "Ausgang";
+                if (maske == "255 255 255 255") return ".";
+                if (maske == "0 0 0 255") return "#";
+            },
+            tick: function() {
+                if (!this.level) {
+                    this.ladeLevel();
+                    this.feinde.push(new Feind(500, 100));
+                    this.feinde.push(new Feind(2000, 100));
+                    this.feinde.push(new Feind(3700, 100));
+                    this.feinde.push(new Feind(4000, 100));
+                    this.feinde.push(new Feind(5600, 100));
+                    this.feinde.push(new Feind(6500, 100));
+                    this.feinde.push(new Feind(7600, 100));
+                }
+                this.strecke += spieler.figur.speed;
+                this.tickZähler++;
+                this.aktiviereFeinde();
+            },
+            aktiviereFeinde: function() {
+                for (var i = 0; i < this.feinde.length; i++) {
+                    this.feinde[i].tick();
+                }
+            },
+            levelEndOffset: function() {
+                return this.level.width - this.breite;
+            },
+            atLevelEnd: function() {
+                return this.strecke >= this.levelEndOffset();
+            },
+            zeichne: function() {
+                var zeichneBeiX = this.strecke * -1;
+                zeichneBeiX = zeichneBeiX > 0 ? 0 : zeichneBeiX;
+                zeichneBeiX = this.atLevelEnd() ? this.levelEndOffset() * -1 : zeichneBeiX;
+                ctx.drawImage(this.level, zeichneBeiX, 0);
+                for (var i = 0; i < this.feinde.length; i++) {
+                    this.feinde[i].zeichne();
+                }
+            }
+        };
+
+        var spieler = {
+            figur: new Figur(160, 390, 25, 25, new Animation("Graphiken/cat", 5), new Animation("Graphiken/cat.backwards", 5)),
+            tick: function() {
+                var currentLocation = welt.pixeltyp(this.figur.leadingEdge(), this.figur.y);
+                if (currentLocation == "Ausgang" || currentLocation == "Grube") {
+                    var state = currentLocation == "Ausgang" ? "gewonnen" : "verloren";
+                    spiel.stopp(state);
+                    return;
+                }
+                this.verarbeiteSteuerung();
+                this.figur.tick();
+            },
+            verarbeiteSteuerung: function() {
+                if (spiel.steuerung.rechts) {
+                    this.figur.speed = 5;
+                }
+                if (spiel.steuerung.links) {
+                    this.figur.speed = -5;
+                }
+                if (!spiel.steuerung.links && !spiel.steuerung.rechts) {
+                    this.figur.speed = 0;
+                }
+                if (spiel.steuerung.hoch && this.figur.standingOnAPlatform()) {
+                    this.figur.downwardForce = -8;
+                    spiel.sounds.springe();
+                }
+            },
+            zeichne: function() {
+                this.figur.zeichne();
+            }
+        };
+
+        function Figur(x, y, breite, höhe, laufendeFigur, umgedrehteFigur) {
+            this.x = x;
+            this.y = y;
+            this.höhe = höhe;
+            this.breite = breite;
+            this.speed = 0;
+            this.downwardForce = 0;
+            this.jumpHeight = 0;
+            this.laufendeFigur = laufendeFigur;
+            this.laufendeFigurReversed = umgedrehteFigur;
+            
+            this.tick = function() {
+                this.applyGravity();
+                this.applyMovement();
+            };
+            
+            this.applyGravity = function() {
+                if (this.isJumping()) {
+                    this.jumpHeight += (this.downwardForce * -1);
+                    if (this.jumpHeight >= this.höhe * 6) {
+                        this.downwardForce = welt.schwerkraft;
+                        this.jumpHeight = 0;
+                    }
+                } else {
+                    if (this.standingOnAPlatform()) {
+                        this.downwardForce = 0;
+                    } else {
+                        this.downwardForce = welt.schwerkraft;
+                    }
+                }
+            };
+            
+            this.applyMovement = function() {
+                var nextX = this.x + this.speed;
+                var nextY = this.y + this.downwardForce;
+                if (nextX < 0) {
+                    this.x = 0;
+                    spiel.stopp("verloren");
+                    return;
+                }
+                var nextLeadingX = this.leadingEdge() + this.speed;
+                var walkingIntoSurface = welt.istFesteOberfläche(nextLeadingX, this.y);
+                if (this.isMoving() && walkingIntoSurface) {
+                    nextX = this.x;
+                    this.speed = 0;
+                }
+                var topLeftIsSolid = welt.istFesteOberfläche(this.leadingEdge(), this.y);
+                var topRightIsSolid = welt.istFesteOberfläche(this.trailingEdge(), this.y);
+                if ((topLeftIsSolid || topRightIsSolid) && this.isJumping()) {
+                    this.downwardForce = welt.schwerkraft;
+                    this.jumpHeight = 0;
+                }
+                this.x = nextX;
+                this.y = nextY;
+            };
+            
+            this.bottom = function() {
+                return this.y + this.höhe;
+            };
+            
+            this.isJumping = function() {
+                return this.downwardForce < 0;
+            };
+            
+            this.isFalling = function() {
+                return this.downwardForce > 0;
+            };
+            
+            this.isMoving = function() {
+                return this.speed != 0;
+            };
+            
+            this.leadingEdge = function() {
+                return this.speed < 0 ? this.x : this.x + this.breite;
+            };
+            
+            this.trailingEdge = function() {
+                return this.speed < 0 ? this.x + this.breite : this.x;
+            };
+            
+            this.standingOnAPlatform = function() {
+                return welt.istFesteOberfläche(this.leadingEdge(), this.bottom() + 1) ||
+                       welt.istFesteOberfläche(this.trailingEdge(), this.bottom() + 1);
+            };
+            
+            this.zeichne = function() {
+                if (!this.laufendeFigur) {
+                    return;
+                }
+                var zeichneBeiX = this.x - welt.strecke;
+                zeichneBeiX = zeichneBeiX > this.x ? this.x : zeichneBeiX;
+                if (welt.atLevelEnd()) {
+                    zeichneBeiX = (welt.breite - (welt.level.width - welt.strecke - (this.x - welt.strecke)));
+                }
+                var sprite = this.speed < 0 ? this.laufendeFigurReversed : this.laufendeFigur;
+                if (this.isJumping() || this.isFalling()) {
+                    sprite.drawFrame(4, zeichneBeiX, this.y, this.höhe, this.breite);
+                } else if (this.isMoving()) {
+                    sprite.zeichne(welt.tickZähler, zeichneBeiX, this.y, this.höhe, this.breite);
+                } else {
+                    sprite.drawFrame(1, zeichneBeiX, this.y, this.höhe, this.breite);
+                }
+            };
+            
+            this.kollidiertMit = function(other) {
+                if (this.x >= other.x &&
+                    this.x <= other.x + other.breite &&
+                    this.y >= other.y &&
+                    this.y <= other.y + other.höhe) {
+                    return true;
+                }
+                return false;
+            };
+        }
+
+        function Animation(dateiname, frameZahl) {
+            this.frames = [];
+            this.currentFrameId = 1;
+            for (var frameId = 1; frameId <= frameZahl; frameId++) {
+                var frame = new Image();
+                frame.src = dateiname + "." + frameId + ".png";
+                this.frames[frameId] = frame;
+            }
+            this.zeichne = function(tickZähler, x, y, höhe, breite) {
+                if (tickZähler % 5 == 0) {
+                    this.currentFrameId++;
+                }
+                this.currentFrameId = this.currentFrameId >= this.frames.length ? 1 : this.currentFrameId;
+                this.drawFrame(this.currentFrameId, x, y, höhe, breite);
+            };
+            this.drawFrame = function(frameNumber, x, y, höhe, breite) {
+                ctx.drawImage(this.frames[frameNumber], x, y, breite, höhe);
+            };
+        }
+
+        function Feind(x, y) {
+            this.figur = new Figur(x, y, 25, 25, new Animation("Graphiken/tiger", 5), new Animation("Graphiken/tiger.backwards", 5));
+            this.tick = function() {
+                var distanceFromPlayer = Math.abs(spieler.figur.x - this.figur.x);
+                if (distanceFromPlayer <= welt.breite * 2) {
+                    this.figur.speed = 2;
+                    if (spieler.figur.x < this.figur.x) {
+                        this.figur.speed *= -1;
+                    }
+                    if (this.figur.kollidiertMit(spieler.figur)) {
+                        spiel.stopp("verloren");
+                    }
+                    this.figur.tick();
+                }
+            };
+            this.zeichne = function() {
+                this.figur.zeichne();
+            };
+        }
+
+        // Touch-Event-Handler (NACH der spiel-Definition)
+        document.getElementById("Oben").addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            spiel.steuerung.hoch = true;
+        });
+        document.getElementById("Oben").addEventListener("touchend", function(e) {
+            e.preventDefault();
+            spiel.steuerung.hoch = false;
+        });
+
+        document.getElementById("Links").addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            spiel.steuerung.links = true;
+        });
+        document.getElementById("Links").addEventListener("touchend", function(e) {
+            e.preventDefault();
+            spiel.steuerung.links = false;
+        });
+
+        document.getElementById("Rechts").addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            spiel.steuerung.rechts = true;
+        });
+        document.getElementById("Rechts").addEventListener("touchend", function(e) {
+            e.preventDefault();
+            spiel.steuerung.rechts = false;
+        });
+
+        spiel.start();
+    </script>
+</body>
+</html>
