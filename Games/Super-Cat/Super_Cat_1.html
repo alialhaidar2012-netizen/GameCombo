@@ -138,11 +138,19 @@ connect: function(keyInfo){
         springe: function(){
              new Audio("sounds/meow.wav").play();
         },
-        hintergrundmusik: function(){
-          if(spiel.aufgerufen) return;
-          spiel.aufgerufen = true;
-         new Audio("sounds/background.mp3").play();
-        }
+hintergrundmusik: function() {
+    if (spiel.aufgerufen) {
+        return;
+    }
+    spiel.aufgerufen = true;
+    try {
+        var audio = new Audio("sounds/background.mp3");
+        audio.loop = true;
+        audio.play();
+    } catch(e) {
+        spiel.aufgerufen = false;
+    }
+},
     },
     schleife: function(){
       if (this.beendet){
