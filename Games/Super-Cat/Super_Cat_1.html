@@ -117,7 +117,7 @@ let spiel = {
 buttonPress: function(keyInfo){
     this[this.mapping[keyInfo.keyCode]]= true;
   if(!spiel.aufgerufen){    
-  this.sounds.hintergrundmusik();
+  spiel.sounds.hintergrundmusik();
   } 
   },
 buttonRelease: function(keyInfo){
