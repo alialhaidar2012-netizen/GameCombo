@@ -102,6 +102,7 @@ resizeCanvas();
 let spiel = {
     timer: null,
     beendet: false,
+    aufgerufen: false,
     steuerung: {
       hoch: false,
       runter: false,
@@ -115,7 +116,9 @@ let spiel = {
     },
 buttonPress: function(keyInfo){
     this[this.mapping[keyInfo.keyCode]]= true;
-    spiel.sounds.hintergrundmusik();
+    if(!aufgerufen){
+  spiel.sounds.hintergrundmusik();
+    }
    },
 buttonRelease: function(keyInfo){
     this[this.mapping[keyInfo.keyCode]]= false;
@@ -134,6 +137,8 @@ connect: function(keyInfo){
              new Audio("sounds/meow.wav").play();
         },
         hintergrundmusik: function(){
+         aufgerufen = true;
+         new Audio("sounds/background.mp3").play();
         }
     },
     schleife: function(){
