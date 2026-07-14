@@ -139,6 +139,7 @@ connect: function(keyInfo){
              new Audio("sounds/meow.wav").play();
         },
         hintergrundmusik: function(){
+          if(spiel.aufgerufen) return;
           spiel.aufgerufen = true;
          new Audio("sounds/background.mp3").play();
         }
