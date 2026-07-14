@@ -146,6 +146,7 @@ hintergrundmusik: function() {
     try {
         var audio = new Audio("sounds/background.mp3");
         audio.loop = true;
+        audio.volume= 0.0;
         audio.play();
     } catch(e) {
         spiel.aufgerufen = false;
