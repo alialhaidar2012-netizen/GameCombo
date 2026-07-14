@@ -148,7 +148,7 @@
       }
     };
     var spieler = {
-      figur: new Figur(160, 390, 25, 25, new Animation("graphics/cat", 5), new Animation("graphics/cat.backwards", 5)),
+      figur: new Figur(160, 390, 25, 25, new Animation("Graphiken/cat", 5), new Animation("Graphiken/cat.backwards", 5)),
       tick: function() {
         var currentLocation = welt.pixeltyp(this.figur.leadingEdge(), this.figur.y);
         if (currentLocation == "Ausgang" || currentLocation == "Grube") {
@@ -298,7 +298,7 @@
     }
 
     function Feind(x, y) {
-      this.figur = new Figur(x, y, 25, 25, new Animation("graphics/tiger", 5), new Animation("graphics/tiger.backwards", 5))
+      this.figur = new Figur(x, y, 25, 25, new Animation("Graphiken/tiger", 5), new Animation("Graphiken/tiger.backwards", 5))
       this.tick = function() {
         var distanceFromPlayer = Math.abs(spieler.figur.x - this.figur.x);
         if (distanceFromPlayer <= welt.breite * 2) {
