@@ -116,7 +116,10 @@ let spiel = {
     },
 buttonPress: function(keyInfo){
     this[this.mapping[keyInfo.keyCode]]= true;
-   },
+  if(!aufgerufen){    
+  this.sounds.hintergrundmusik();
+  } 
+  },
 buttonRelease: function(keyInfo){
     this[this.mapping[keyInfo.keyCode]]= false;
    },
@@ -134,6 +137,7 @@ connect: function(keyInfo){
              new Audio("sounds/meow.wav").play();
         },
         hintergrundmusik: function(){
+          spiel.aufgerufen = true;
          new Audio("sounds/background.mp3").play();
         }
     },
@@ -157,7 +161,6 @@ this.timer = window.setTimeout(function() { spiel.schleife(); }, 1000/60);
     start: function(){
       this.steuerung.connect();
       this.schleife();
-      this.sounds.hintergrundmusik();
     	},
     stopp: async function(grund){
        this.beendet = true;
