@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>Snake Vorschau</title>
-      <link rel="manifest" href="../../manifest.json" />
+    <link rel="manifest" href="../../manifest.json" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; background-color: darkblue; font-family: sans-serif; }
         .button-container { display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 20px; min-height: 100vh; justify-content: center; }
-        .buttons { width: 250px; height: 60px; font-size: 18px; font-weight: 600; background-color: darkgreen; color: yellow; border: none; border-radius: 8px; cursor: pointer; }
-        .buttons:hover { background-color: orange; }
+        .buttons { width: 250px; height: 60px; font-size: 18px; font-weight: 600; background-color: darkgreen; color: yellow; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; }
+        .buttons:hover, .buttons:active { background-color: orange; }
         .top-left-buttons { position: fixed; top: 20px; left: 20px; z-index: 10; display: flex; flex-direction: column; gap: 8px; }
-        .small-btn { width: 100px; height: 36px; font-size: 14px; font-weight: 600; background-color: darkgreen; color: yellow; border: none; border-radius: 8px; cursor: pointer; }
-        .small-btn:hover { background-color: orange; }
+        .small-btn { width: 100px; height: 36px; font-size: 14px; font-weight: 600; background-color: darkgreen; color: yellow; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; }
+        .small-btn:hover, .small-btn:active { background-color: orange; }
     </style>
 </head>
 <body>
@@ -22,24 +22,41 @@
         <button class="small-btn" onclick="window.location.href='SteuerungSnake.html'">Tutorial</button>
     </div>
     <div class="button-container" id="container"></div>
+    
     <script>
-        const container = document.getElementById("container");
-        const buttons = [
-            ["Level 1", "snake_Map_1.html"],
-            ["Level 2", "snake_Map_2.html"],
-            ["Level 3", "snake_Map_3.html"]
-        ];
-        buttons.forEach(([text, link]) => {
-            const btn = document.createElement("button");
-            btn.className = "buttons";
-            btn.textContent = text;
-            btn.onclick = function() {
-                sessionStorage.clear();
-                sessionStorage.setItem("currentLevel", link);
-                window.location.href = link;
-            };
-            container.appendChild(btn);
-        });
+        (function() {
+            const container = document.getElementById("container");
+            
+            // Prüfen ob Container existiert
+            if (!container) {
+                console.error("Container-Element nicht gefunden!");
+                return;
+            }
+            
+            const buttons = [
+                ["Level 1", "snake_Map_1.html"],
+                ["Level 2", "snake_Map_2.html"],
+                ["Level 3", "snake_Map_3.html"]
+            ];
+            
+            buttons.forEach(function(btnData) {
+                const text = btnData[0];
+                const link = btnData[1];
+                
+                const btn = document.createElement("button");
+                btn.className = "buttons";
+                btn.textContent = text;
+                
+                btn.addEventListener("click", function() {
+                    // Nur den Level setzen, nicht alles löschen
+                    sessionStorage.setItem("currentLevel", link);
+                    console.log("Starte Level: " + link);
+                    window.location.href = link;
+                });
+                
+                container.appendChild(btn);
+            });
+        })();
     </script>
 </body>
 </html>
