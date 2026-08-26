@@ -165,14 +165,14 @@ yUmkehren: function() {
         let level = 4;
         let gewonnen = false
         const result = await spielBeenden("Tischtennis", level, false);
-        localStorage.setItem("Trophies", result.erhalteneTrophies);
+        localStorage.setItem("Trophies", -regeln.erhalteneTrophies);
         localStorage.setItem("Victory", "false");
         window.location.replace("../Game_Over.html");
     } else {
         let level = 4;
         let gewonnen = true;
         const result = await spielBeenden("Tischtennis", level, true);
-        localStorage.setItem("Trophies", result.erhalteneTrophies);
+        localStorage.setItem("Trophies", regeln.erhalteneTrophies);
         localStorage.setItem("Victory", "true");
         window.location.replace("../Victory.html");
               }
