@@ -118,17 +118,17 @@ function Schläger(x,y,breite,höhe, ki=false, spieler= false){
   this.gehe= function(tastencode){
        var yNeu = this.y;
        if(tastencode == 40 && this.ki) {
-           yNeu += 7.5;
-           this.speedModifizierer = 3.0; 
+           yNeu += 7;
+           this.speedModifizierer = 2.0; 
        }else if(tastencode == 38 && this.ki){
-           yNeu += -7.5;
-           this.speedModifizierer = 3.0;
+           yNeu += -7;
+           this.speedModifizierer = 2.0;
        } else if (tastencode == 40 && this.spieler) {
-           yNeu += 5;
-           this.speedModifizierer = 1.5;
+           yNeu += 6;
+           this.speedModifizierer = 2.0;
        } else if (tastencode == 38 && this.spieler) {
-           yNeu += -5;
-           this.speedModifizierer = 1.5;
+           yNeu += -6;
+           this.speedModifizierer = 2.0;
        }else{
            this.speedModifizierer = 0;
        }
